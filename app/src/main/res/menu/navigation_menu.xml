@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_diet"
+        android:icon="@drawable/ic_diet1"
+        android:title="饮食" />
+
+    <item
+        android:id="@+id/nav_healthy"
+        android:icon="@drawable/ic_healthy1"
+        android:title="健康" />
+
+    <item
+        android:id="@+id/nav_community"
+        android:icon="@drawable/ic_community1"
+        android:title="社区" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_profile1"
+        android:title="个人" />
+</menu>

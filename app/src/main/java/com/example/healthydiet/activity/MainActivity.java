@@ -1,4 +1,4 @@
-package com.example.healthydiet;
+package com.example.healthydiet.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.healthydiet.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class MainActivity extends AppCompatActivity {
@@ -62,6 +63,13 @@ public class MainActivity extends AppCompatActivity {
                 // 结束当前页面，使其不能返回
                 finish();
             }
+        });
+
+        // 获取注册按钮并设置点击事件
+        findViewById(R.id.register_button).setOnClickListener(v -> {
+            // 跳转到注册页面
+            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+            startActivity(intent);
         });
     }
 }
