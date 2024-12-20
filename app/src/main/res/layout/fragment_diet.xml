@@ -1,11 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:backgroundTint="#000B0B0B"
+    android:foregroundTint="#00000000">
 
+    <!-- 标题栏 -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#8BC34A"
+        android:backgroundTint="#8CC34B"
+        android:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
+        android:titleTextColor="#F44336"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="饮食管理" />
+
+    <!-- 环形进度条包装在CardView中 -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/progressCardView"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_marginTop="40dp"
+        app:cardBackgroundColor="#00FFFFFF"
+        app:cardCornerRadius="2dp"
+        app:cardElevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+        <ProgressBar
+            android:id="@+id/circularProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:indeterminate="false"
+            android:indeterminateOnly="false"
+            android:max="2000"
+            android:progress="0"
+            android:progressDrawable="@drawable/record_progress" />
+    </androidx.cardview.widget.CardView>
+
+
+    <!-- 显示摄入的千卡数 -->
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/caloriesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="diet" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:fontFamily="cursive"
+        android:text="今日已摄入 0 千卡"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#040404"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressCardView" />
+
+    <Button
+        android:id="@+id/details_button"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="查看详情>>"
+        android:textAllCaps="false"
+        android:textColor="#4CAF50"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/caloriesTextView"
+        app:layout_constraintTop_toBottomOf="@id/progressCardView" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/caloriesTextView">
+
+        <Button
+            android:id="@+id/breakfastButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+
+            android:backgroundTint="#8BC34A"
+            android:text=" 记早餐"
+            app:icon="@drawable/ic_breakfast"
+            app:iconPadding="1dp"
+            app:layout_constraintEnd_toStartOf="@id/lunchButton"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/lunchButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+
+            android:backgroundTint="#8BC34A"
+            android:text=" 记午餐"
+            app:icon="@drawable/ic_lunch"
+            app:iconPadding="1dp"
+            app:layout_constraintEnd_toStartOf="@id/dinnerButton"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/breakfastButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/dinnerButton"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+
+            android:backgroundTint="#8BC34A"
+            android:text=" 记晚餐"
+            app:icon="@drawable/ic_dinner"
+            app:iconPadding="1dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintStart_toEndOf="@id/lunchButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
