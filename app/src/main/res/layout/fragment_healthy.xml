@@ -4,15 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
+    <!-- 标题栏 -->
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar2"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#80CDDC39"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:title="健康管理"
-        app:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
-        app:titleTextColor="@color/black" />
+        android:layout_height="0dp"
+        android:background="#8BC34A"
+        android:backgroundTint="#8CC34B"
+        android:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
+        android:titleTextColor="#F44336"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="健 康 管 理" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

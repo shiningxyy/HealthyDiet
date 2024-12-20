@@ -19,7 +19,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="饮食管理" />
+        app:title="饮 食 管 理" />
 
     <!-- 环形进度条包装在CardView中 -->
     <androidx.cardview.widget.CardView

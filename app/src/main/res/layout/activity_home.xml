@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
 
-        app:itemRippleColor="#CDDC39"
+        app:itemRippleColor="#8BC34A"
         app:itemIconTint="@color/black"
         app:itemTextColor="#050505"
         app:labelVisibilityMode="auto"
