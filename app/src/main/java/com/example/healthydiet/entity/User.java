@@ -7,7 +7,9 @@ public class User {
     private int age;
     private int height;
     private int weight;
-    private boolean login;  // 添加 login 字段
+    private int userId;
+    private String profilePicture;
+    private int isblocked;
     // 构造函数、getter 和 setter
     public User(String name,String password,int weight,  int age, int height,String phone) {
         this.phone = phone;
@@ -16,7 +18,7 @@ public class User {
         this.age = age;
         this.height = height;
         this.weight = weight;
-        this.login = true;  // 设置为 true，符合后端要求
+
     }
 
     // Getter 和 Setter 方法
@@ -68,11 +70,27 @@ public class User {
         this.weight = weight;
     }
 
-    public boolean isLogin() {
-        return login;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public void setLogin(boolean login) {
-        this.login = login;
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public int getIsblocked() {
+        return isblocked;
+    }
+
+    public void setIsblocked(int isblocked) {
+        this.isblocked = isblocked;
     }
 }

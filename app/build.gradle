@@ -46,4 +46,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'  // HttpLoggingInterceptor
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.2'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'org.java-websocket:Java-WebSocket:1.5.2'  // 或者你选择其他 WebSocket 库
 }

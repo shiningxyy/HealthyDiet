@@ -3,24 +3,25 @@ package com.example.healthydiet.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.healthydiet.R;
+import com.example.healthydiet.entity.User;
 import com.google.android.material.textfield.TextInputEditText;
+
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class MainActivity extends AppCompatActivity {
 
     private TextInputEditText phoneEditText;
     private TextInputEditText passwordEditText;
+    String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         // 获取登录按钮并设置点击事件
         findViewById(R.id.login_button).setOnClickListener(v -> {
             // 获取账号和密码的值
-            String phone = phoneEditText.getText().toString().trim();
+            phone = phoneEditText.getText().toString().trim();
             String password = passwordEditText.getText().toString().trim();
 
             // 验证输入是否合法
@@ -44,7 +45,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Please enter your password.", Toast.LENGTH_SHORT).show();
             } else {
                 // 进行登录操作
-                performLogin(phone, password);
+                try {
+                    performLogin(phone, password);
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -56,73 +61,94 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void performLogin(String phone, String password) {
-        // 创建请求的 URL
-        String urlString = "http://10.0.2.2:8080/api/api/users/login";
+    private void performLogin(String phone, String password) throws URISyntaxException {
+        // WebSocket 服务器地址
+        String wsUrl = "ws://10.0.2.2:8080/hd/websocket";
 
-        // 创建请求数据的 JSON 格式字符串
-        String jsonBody = "{"
-                + "\"phone\": \"" + phone + "\","
-                + "\"password\": \"" + password + "\""
-                + "}";
+        // 创建 WebSocket 客户端
+        WebSocketClient webSocketClient = new WebSocketClient(new URI(wsUrl)) {
+            @Override
+            public void onOpen(ServerHandshake handshakedata) {
+                // WebSocket 连接建立成功，准备发送登录数据
+                try {
+                    // 构建包含指令的完整字符串
+                    String loginMessage = "login:{" +
+                            "\"password\": \"" + password + "\"," +
+                            "\"phone\": \"" + phone + "\"" +
+                            "}";
 
-        // 使用 HttpURLConnection 发送 POST 请求
-        new Thread(() -> {
-            try {
-                // 创建 URL 对象
-                URL url = new URL(urlString);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    // 打印登录消息，查看是否正确构建
+                    Log.d("WebSocket", "loginMessage: " + loginMessage);
 
-                // 设置请求方法
-                connection.setRequestMethod("POST");
-                connection.setConnectTimeout(5000);  // 设置连接超时
-                connection.setReadTimeout(5000);     // 设置读取超时
-
-                // 设置请求头
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setDoOutput(true);  // 允许向输出流写数据
-
-                // 写入请求体
-                try (OutputStream os = connection.getOutputStream()) {
-                    byte[] input = jsonBody.getBytes("utf-8");
-                    os.write(input, 0, input.length);
+                    // 发送登录请求，发送的是整个字符串
+                    send(loginMessage);  // 直接发送构建的字符串
+                } catch (Exception e) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(MainActivity.this, "Error sending login data: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
                 }
+            }
 
-                // 获取服务器响应代码
-                int responseCode = connection.getResponseCode();
-
-                // 读取响应
-                BufferedReader in = new BufferedReader(new InputStreamReader(
-                        responseCode == HttpURLConnection.HTTP_OK
-                                ? connection.getInputStream()
-                                : connection.getErrorStream()));
-                String inputLine;
-                StringBuilder response = new StringBuilder();
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-
-                // 判断请求是否成功
+            @Override
+            public void onMessage(String message) {
+                Log.d("WebSocket", "Server response: " + message);
+                // 处理服务器响应
                 runOnUiThread(() -> {
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-                        // 登录成功
-                        Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();  // 结束当前页面，不能返回
-                    } else {
-                        // 登录失败
-                        Toast.makeText(MainActivity.this, "Login failed: " + response.toString(), Toast.LENGTH_SHORT).show();
+                    try {
+                        JSONObject response = new JSONObject(message);
+                        // 打印响应对象，检查内容
+                        Log.d("WebSocket", "Parsed JSON response: " + response);
+                        // 假设服务器返回的是一个状态字段 "status"，并且为 "success" 表示登录成功
+                        if (response.optString("phone").equals(phone)) {
+                            String username1=response.optString("username");
+                            String password1=response.optString("password");
+                            String profilePicture=response.optString("profilePicture");
+                            int weight1=response.optInt("weight");
+                            int age1=response.optInt("age");
+                            int height1=response.optInt("height");
+                            int isblocked=response.getInt("isblocked");
+                            String phone1=response.optString("phone");
+                            int userId1=response.optInt("userId");
+                            User user = new User(username1, password1, weight1, age1, height1, phone1);
+                            user.setUserId(userId1);
+                            user.setIsblocked(isblocked);
+                            user.setProfilePicture(profilePicture);
+
+                            // 登录成功，跳转到主页
+                            Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                            finish();  // 结束当前页面，不能返回
+                        } else {
+                            // 登录失败，显示错误信息
+                            Toast.makeText(MainActivity.this, "Login failed: " + response.optString("message"), Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        Log.e("WebSocket", "Error processing response: " + e.getMessage());
+                        Toast.makeText(MainActivity.this, "Error processing response: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
 
-            } catch (Exception e) {
+            @Override
+            public void onClose(int code, String reason, boolean remote) {
+                // WebSocket 连接关闭处理
                 runOnUiThread(() -> {
-                    Toast.makeText(MainActivity.this, "Login failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Connection closed: " + reason, Toast.LENGTH_SHORT).show();
                 });
             }
-        }).start();
+
+            @Override
+            public void onError(Exception ex) {
+                // WebSocket 发生错误处理
+                runOnUiThread(() -> {
+                    Toast.makeText(MainActivity.this, "WebSocket error: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        };
+
+        // 连接 WebSocket
+        webSocketClient.connect();
     }
 
 }

@@ -4,22 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="#000B0B0B"
-    android:foregroundTint="#00000000">
+
+    android:background="@drawable/t7">
 
     <!-- 标题栏 -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:background="#8BC34A"
         android:backgroundTint="#8CC34B"
-        android:titleTextAppearance="@style/TextAppearance.AppCompat.Large"
-        android:titleTextColor="#F44336"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="饮 食 管 理" />
+        app:title="饮 食 管 理"
+        app:titleTextAppearance="@style/ToolbarTitleStyle" />
 
     <!-- 环形进度条包装在CardView中 -->
     <androidx.cardview.widget.CardView
@@ -130,4 +129,19 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/circularButton"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+
+
+        app:backgroundTint="#8BC34A"
+        app:icon="@drawable/ic_camera"
+        app:iconSize="32dp"
+        app:iconTint="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

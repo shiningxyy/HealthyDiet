@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="16dp"
+    android:backgroundTint="@color/white"
+    android:elevation="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/foodNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Food Name"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/caloriesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Food Name"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/carbohydratesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Food Name"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/potassiumTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Food Name"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/sodiumTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Food Name"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/dietaryFiberTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Food Name"
+            android:textSize="18sp" />
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

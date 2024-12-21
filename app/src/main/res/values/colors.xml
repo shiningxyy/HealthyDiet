@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- 选中项的背景色：白色 -->
+    <color name="selected_item_color">#FFFFFF</color>  <!-- 白色背景 -->
+
+    <!-- 未选中项的背景色：绿色 -->
+    <color name="unselected_item_color">#8BC34A</color>  <!-- 绿色背景 -->
+
 </resources>

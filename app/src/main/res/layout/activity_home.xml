@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
 
-        app:itemRippleColor="#8BC34A"
         app:itemIconTint="@color/black"
+        app:itemRippleColor="#8BC34A"
         app:itemTextColor="#050505"
         app:labelVisibilityMode="auto"
         app:layout_constraintBottom_toBottomOf="parent"

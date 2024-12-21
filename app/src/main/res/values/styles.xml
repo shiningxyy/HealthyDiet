@@ -1,0 +1,8 @@
+<resources>
+    <!-- 自定义的标题文本样式 -->
+    <style name="ToolbarTitleStyle">
+        <item name="android:textStyle">bold</item>  <!-- 设置字体加粗 -->
+        <item name="android:textColor">#FFFFFF</item>  <!-- 设置字体颜色 -->
+        <item name="android:textSize">24sp</item>    <!-- 设置字体大小 -->
+    </style>
+</resources>

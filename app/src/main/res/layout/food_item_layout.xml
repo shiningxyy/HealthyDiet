@@ -1,0 +1,28 @@
+<!-- food_item_layout.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:background="?android:attr/selectableItemBackground"
+
+    android:gravity="start">
+
+    <TextView
+        android:id="@+id/food_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Food Name"
+        android:gravity="start"
+        android:textSize="16sp"
+        android:paddingBottom="4dp"/>
+
+    <TextView
+        android:id="@+id/food_calories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="100千卡/100克"
+        android:gravity="start"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"/>
+</LinearLayout>
