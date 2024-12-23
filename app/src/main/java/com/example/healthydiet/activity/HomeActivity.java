@@ -10,16 +10,21 @@ import com.example.healthydiet.fragment.CommunityFragment;
 import com.example.healthydiet.fragment.DietFragment;
 import com.example.healthydiet.fragment.HealthyFragment;
 import com.example.healthydiet.fragment.ProfileFragment;
+import com.example.healthydiet.websocket.WebSocketManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HomeActivity extends AppCompatActivity{
     private BottomNavigationView bottomNavigationView;
     private Fragment currentFragment;
+    private WebSocketManager webSocketManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // 获取WebSocketManager实例
+        webSocketManager = WebSocketManager.getInstance();
 
         // 获取底部导航栏
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -33,7 +38,7 @@ public class HomeActivity extends AppCompatActivity{
         }
 
         // 设置导航栏项选择监听器
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+        bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();  // 获取当前点击的菜单项的ID
 
 
@@ -73,6 +78,13 @@ public class HomeActivity extends AppCompatActivity{
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)  // 替换当前Fragment
                 .commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 如果需要在Activity销毁时关闭WebSocket连接
+        // webSocketManager.closeConnection();
     }
 
 }

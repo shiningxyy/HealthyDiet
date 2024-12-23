@@ -3,6 +3,7 @@ package com.example.healthydiet.activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.healthydiet.adapter.FoodListAdapter;
@@ -26,11 +27,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.healthydiet.R;
+import com.example.healthydiet.websocket.WebSocketManager;
+import com.example.healthydiet.websocket.WebSocketMessageType;
 
 
 public class FoodlistActivity extends AppCompatActivity implements SidebarAdapter.OnCategoryClickListener{
 
-    private WebSocketClient webSocketClient;
+    private WebSocketManager webSocketManager;
     private Handler handler;
     private Map<String, List<FoodItem>> foodByType = new HashMap<>();
     private RecyclerView sidebarRecyclerView;
@@ -45,68 +48,52 @@ public class FoodlistActivity extends AppCompatActivity implements SidebarAdapte
         // 初始化 Handler，用于在主线程更新 UI
         handler = new Handler(getMainLooper());
 
-        // 初始化 WebSocket 客户端
-        URI uri = URI.create("ws://10.0.2.2:8080/hd/websocket");
-        webSocketClient = new WebSocketClient(uri) {
+        webSocketManager = WebSocketManager.getInstance();
+        webSocketManager.logConnectionStatus();  // 记录连接状态
+        
+        // 注册食物列表回调
+        webSocketManager.registerCallback(WebSocketMessageType.FOOD_LIST, message -> {
+            Log.d("FoodList", "Received food list response: " + message);
+            try {
+                JSONArray foodItems = new JSONArray(message);
+                List<FoodItem> foodItemList = new ArrayList<>();
 
-            @Override
-            public void onOpen(ServerHandshake handshakedata) {
-                // 连接成功后，发送获取食品列表的指令
-                send("getAllFood");
-            }
-
-            @Override
-            public void onMessage(String message) {
-                // 接收到服务器返回的数据
-                try {
-                    // 解析返回的 JSON 数据
-                    JSONArray foodItems = new JSONArray(message);
-                    List<FoodItem> foodItemList = new ArrayList<>();
-
-                    for (int i = 0; i < foodItems.length(); i++) {
-                        JSONObject foodJson = foodItems.getJSONObject(i);
-                        FoodItem foodItem = new FoodItem(
-                                foodJson.getString("name"),
-                                foodJson.getString("type"),
-                                foodJson.getInt("calories"),
-                                foodJson.getDouble("carbohydrates"),
-                                foodJson.getDouble("dietaryFiber"),
-                                foodJson.getDouble("potassium"),
-                                foodJson.getDouble("sodium")
-                        );
-                        int id=foodJson.getInt("foodid");
-                        foodItem.setFoodid(id);
-                        foodItemList.add(foodItem);
-                     //   System.out.println(foodItem.getName());
-                    }
-
-                    // 回调给 UI 线程
-                    handler.post(() -> onFoodListUpdated(foodItemList));
-
-                } catch (Exception e) {
-                    e.printStackTrace();
+                for (int i = 0; i < foodItems.length(); i++) {
+                    JSONObject foodJson = foodItems.getJSONObject(i);
+                    FoodItem foodItem = new FoodItem(
+                            foodJson.getString("name"),
+                            foodJson.getString("type"),
+                            foodJson.getInt("calories"),
+                            foodJson.getDouble("carbohydrates"),
+                            foodJson.getDouble("dietaryFiber"),
+                            foodJson.getDouble("potassium"),
+                            foodJson.getDouble("sodium")
+                    );
+                    int id = foodJson.getInt("foodid");
+                    foodItem.setFoodid(id);
+                    foodItemList.add(foodItem);
                 }
-            }
 
-            @Override
-            public void onClose(int code, String reason, boolean remote) {
-                // 连接关闭
+                // 在主线程更新UI
+                runOnUiThread(() -> onFoodListUpdated(foodItemList));
+            } catch (Exception e) {
+                Log.e("FoodList", "Error processing food list: " + e.getMessage());
+                e.printStackTrace();
             }
-
-            @Override
-            public void onError(Exception ex) {
-                ex.printStackTrace();
-            }
-        };
-        webSocketClient.connect();
+        });
+        
+        // 确保WebSocket已连接后再发送请求
+        if (!webSocketManager.isConnected()) {
+            Log.d("FoodList", "WebSocket not connected, attempting to reconnect...");
+            webSocketManager.reconnect();
+        }
+        webSocketManager.sendMessage("getAllFood");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (webSocketClient != null && webSocketClient.isOpen()) {
-            webSocketClient.close();
-        }
+        webSocketManager.unregisterCallback(WebSocketMessageType.FOOD_LIST);
     }
 
     // 当接收到更新的数据时，这个方法会被调用
