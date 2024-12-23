@@ -15,6 +15,7 @@ import com.example.healthydiet.R;
 import com.example.healthydiet.activity.FoodlistActivity;
 import com.example.healthydiet.activity.MainActivity;
 import com.example.healthydiet.activity.RegisterActivity;
+import com.example.healthydiet.entity.User;
 
 // DietFragment.java
 public class DietFragment extends Fragment {
@@ -23,6 +24,7 @@ public class DietFragment extends Fragment {
     private Button breakfast_button;
     private Button lunch_button;
     private Button dinner_button;
+    //private User user;
     public DietFragment() {
         // Required empty public constructor
     }
@@ -32,7 +34,10 @@ public class DietFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_diet, container, false);
-
+        // 获取从 Activity 传递过来的 Bundle
+//        if (getArguments() != null) {
+//            user = (User) getArguments().getSerializable("user");
+//        }
         // 初始化进度条
         circularProgressBar = view.findViewById(R.id.circularProgressBar);
         caloriesTextView = view.findViewById(R.id.caloriesTextView);
@@ -50,6 +55,8 @@ public class DietFragment extends Fragment {
         breakfast_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
             Intent intent = new Intent(getActivity(), FoodlistActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            // 将 user 对象传递给目标 Activity
+          //  intent.putExtra("user", user); // 将 user 对象作为 Extra 传递
             startActivity(intent);
         });
 
@@ -59,6 +66,8 @@ public class DietFragment extends Fragment {
         lunch_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
             Intent intent = new Intent(getActivity(), FoodlistActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            // 将 user 对象传递给目标 Activity
+        //    intent.putExtra("user", user); // 将 user 对象作为 Extra 传递
             startActivity(intent);
         });
 
@@ -68,6 +77,8 @@ public class DietFragment extends Fragment {
         dinner_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
             Intent intent = new Intent(getActivity(), FoodlistActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            // 将 user 对象传递给目标 Activity
+            //intent.putExtra("user", user); // 将 user 对象作为 Extra 传递
             startActivity(intent);
         });
 

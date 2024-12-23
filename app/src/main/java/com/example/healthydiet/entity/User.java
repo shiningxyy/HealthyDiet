@@ -1,5 +1,7 @@
 package com.example.healthydiet.entity;
 
+import java.io.Serializable;
+
 public class User {
     private String phone;
     private String password;

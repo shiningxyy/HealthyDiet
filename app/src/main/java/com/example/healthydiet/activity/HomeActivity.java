@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.healthydiet.R;
+import com.example.healthydiet.entity.User;
 import com.example.healthydiet.fragment.CommunityFragment;
 import com.example.healthydiet.fragment.DietFragment;
 import com.example.healthydiet.fragment.HealthyFragment;
@@ -75,6 +76,11 @@ public class HomeActivity extends AppCompatActivity{
     }
 
     private void switchFragment(Fragment fragment) {
+//        // 将 user 对象传递给 Fragment
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable("user", user);  // 传递 user 对象
+//        fragment.setArguments(bundle);  // 将 Bundle 设置为 Fragment 的参数
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)  // 替换当前Fragment
                 .commit();

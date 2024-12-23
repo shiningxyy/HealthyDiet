@@ -29,6 +29,7 @@
         <activity android:name=".activity.HomeActivity"></activity>
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.FoodlistActivity" />
+        <activity android:name=".activity.AddFoodRecordActivity" />
     </application>
 
 </manifest>

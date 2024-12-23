@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.healthydiet.R;
+import com.example.healthydiet.activity.AddFoodRecordActivity;
 import com.example.healthydiet.entity.FoodItem;
 
 import java.util.List;
@@ -62,34 +63,48 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
 
         // 设置卡片中的文本
         TextView foodNameTextView = dialog.findViewById(R.id.foodNameTextView);
-        foodNameTextView.setText(foodItem.getName());
+        foodNameTextView.setText(foodItem.getName()+"/100克");
 
         TextView caloriesTextView = dialog.findViewById(R.id.caloriesTextView);
-        caloriesTextView.setText("热量："+foodItem.getCalories()+ "千卡/100克");
+        caloriesTextView.setText("热量："+foodItem.getCalories()+ "千卡");
+
+        TextView fatTextView = dialog.findViewById(R.id.fatTextView);
+        fatTextView.setText("脂肪："+String.format("%.1f", foodItem.getFat())+"克");
+
+        TextView proteinTextView = dialog.findViewById(R.id.proteinTextView);
+        proteinTextView.setText("蛋白质："+String.format("%.1f", foodItem.getProtein())+"克");
 
         TextView carbohydratesTextView = dialog.findViewById(R.id.carbohydratesTextView);
-        carbohydratesTextView.setText("碳水化合物："+String.format("%.1f", foodItem.getCarbohydrates())+"克/100克");
+        carbohydratesTextView.setText("碳水化合物："+String.format("%.1f", foodItem.getCarbohydrates())+"克");
 
         TextView dietaryFiberTextView = dialog.findViewById(R.id.dietaryFiberTextView);
-        dietaryFiberTextView.setText("膳食纤维："+String.format("%.1f", foodItem.getDietaryFiber())+"克/100克");
+        dietaryFiberTextView.setText("膳食纤维："+String.format("%.1f", foodItem.getDietaryFiber())+"克");
 
         TextView potassiumTextView = dialog.findViewById(R.id.potassiumTextView);
-        potassiumTextView.setText("钾："+String.format("%.1f", foodItem.getPotassium())+"毫克/100克");
+        potassiumTextView.setText("钾："+String.format("%.1f", foodItem.getPotassium())+"毫克");
 
         TextView sodiumTextView = dialog.findViewById(R.id.sodiumTextView);
-        sodiumTextView.setText("钠："+String.format("%.1f", foodItem.getSodium())+"毫克/100克");
+        sodiumTextView.setText("钠："+String.format("%.1f", foodItem.getSodium())+"毫克");
+
 
         // 设置“是”按钮
         Button yesButton = dialog.findViewById(R.id.yesButton);
         yesButton.setOnClickListener(v -> {
             // 跳转到 FoodRecord 页面
-            //Intent intent = new Intent(context, FoodRecordActivity.class);
+            Intent intent = new Intent(context, AddFoodRecordActivity.class);
             // 你可以将 foodItem 的相关数据传递到 FoodRecordActivity
-          //  intent.putExtra("food_name", foodItem.getName());
-         //   intent.putExtra("food_calories", foodItem.getCalories());
+            intent.putExtra("food_name", foodItem.getName());
+            intent.putExtra("food_calories", foodItem.getCalories());
+            intent.putExtra("food_fat", foodItem.getFat());
+            intent.putExtra("food_protein", foodItem.getProtein());
+            intent.putExtra("food_carbohydrates", foodItem.getCarbohydrates());
+            intent.putExtra("food_id", foodItem.getFoodid());
+            intent.putExtra("food_DietaryFiber", foodItem.getDietaryFiber());
+            intent.putExtra("food_Potassium", foodItem.getPotassium());
+            intent.putExtra("food_Sodium", foodItem.getSodium());
             // 可以根据需求传递更多数据
-         //   context.startActivity(intent);
-          //  dialog.dismiss();  // 关闭 Dialog
+            context.startActivity(intent);
+            dialog.dismiss();  // 关闭 Dialog
         });
 
         // 设置“否”按钮

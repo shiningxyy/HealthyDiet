@@ -181,7 +181,9 @@ public class WebSocketManager {
         Log.d("WebSocket", "Registering callback for type: " + type);
         callbackMap.put(type, callback);
     }
-
+    public void addfoodrecordCallback(String type, WebSocketCallback callback) {
+        callbackMap.put(type, callback);
+    }
     // 移除回调
     public void unregisterCallback(String type) {
         callbackMap.remove(type);
