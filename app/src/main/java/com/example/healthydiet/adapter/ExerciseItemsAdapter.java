@@ -5,26 +5,26 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
-import com.example.healthydiet.R;
+import com.example.healthydiet.activity.HomeActivity;
+import com.example.healthydiet.activity.MainActivity;
 import com.example.healthydiet.entity.ExerciseItem;
 import com.example.healthydiet.entity.ExerciseRecord;
+import com.example.healthydiet.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import android.content.Intent;
 
 public class ExerciseItemsAdapter extends BaseAdapter {
     private List<ExerciseItem> exerciseItems;
-    private Context context; // 用于弹出 Dialog
+    private Context context;
 
     public ExerciseItemsAdapter(List<ExerciseItem> exerciseItems, Context context) {
         this.exerciseItems = exerciseItems;
@@ -50,7 +50,6 @@ public class ExerciseItemsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            // Inflate the list item layout
             convertView = LayoutInflater.from(context).inflate(R.layout.exercise_item, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.exerciseNameTextView = convertView.findViewById(R.id.exerciseNameTextView);
@@ -61,10 +60,10 @@ public class ExerciseItemsAdapter extends BaseAdapter {
         }
 
         ExerciseItem exerciseItem = exerciseItems.get(position);
-        viewHolder.exerciseNameTextView.setText(exerciseItem.getName());  // 设置运动名称
-        viewHolder.caloriesTextView.setText(exerciseItem.getCaloriesPerHour() + "千卡/60分钟");  // 设置运动的卡路里消耗
+        viewHolder.exerciseNameTextView.setText(exerciseItem.getName());
+        viewHolder.caloriesTextView.setText(exerciseItem.getCaloriesPerHour() + "千卡/60分钟");
 
-        // 设置点击事件，弹出详情
+        // 点击事件，弹出详情
         convertView.setOnClickListener(v -> showExercisePopup(exerciseItem));
 
         return convertView;
@@ -74,53 +73,52 @@ public class ExerciseItemsAdapter extends BaseAdapter {
     private String getCurrentTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Date date = new Date();
-        return sdf.format(date);  // 返回当前时间的字符串
-    }
-
-    public static class ViewHolder {
-        TextView exerciseNameTextView;
-        TextView caloriesTextView;
+        return sdf.format(date);
     }
 
     // 弹出运动详情卡片的 Dialog
     private void showExercisePopup(ExerciseItem exerciseItem) {
-        // 创建 Dialog
         Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.exercise_card);  // 自定义布局
+        dialog.setContentView(R.layout.exercise_card);
         EditText exerciseDurationEditText = dialog.findViewById(R.id.exerciseDurationEditText);
 
-        // 设置“确认”按钮
         Button yesButton = dialog.findViewById(R.id.yesButton);
         yesButton.setOnClickListener(v -> {
-            String durationStr = exerciseDurationEditText.getText().toString();
-            int duration = 0;
+//            String durationStr = exerciseDurationEditText.getText().toString();
+//            int duration = 0;
+//
+//            if (!durationStr.isEmpty()) {
+//                duration = Integer.parseInt(durationStr);  // 获取运动时长
+//            }
+//
+//            // 计算消耗的卡路里
+//            int burnedCalories = (int) ((exerciseItem.getCaloriesPerHour() / 60) * duration);
+//
+//            // 跳转到 FoodRecord 页面
+//            Intent intent = new Intent(context, HomeActivity.class);
+//            // 你可以将 foodItem 的相关数据传递到 FoodRecordActivity
+//            intent.putExtra("exerciseId", exerciseItem.getExerciseId());
+//            intent.putExtra("caloriesPerHour", exerciseItem.getCaloriesPerHour());
+//            intent.putExtra("name", exerciseItem.getName());
+//            intent.putExtra("duration", duration);
+//            intent.putExtra("burnedCalories", burnedCalories);
+//            intent.putExtra("date", getCurrentTime());
+//
+//            // 可以根据需求传递更多数据
+//            context.startActivity(intent);
+            dialog.dismiss();  // 关闭 Dialog
 
-            if (!durationStr.isEmpty()) {
-                duration = Integer.parseInt(durationStr);  // 转换为整数
-            }
-            // 获取选中的运动项名称
-            String exerciseName = exerciseItem.getName();  // 假设 exerciseItem 是你选择的运动项
-            // 获取当前时间，作为记录时间
-            String currentTime = getCurrentTime();  // 方法获取当前时间
-
-            // 创建新的运动记录
-            ExerciseRecord exerciseRecord = new ExerciseRecord(exerciseName, duration, currentTime);
-
-            // 将记录添加到记录列表
-            addExerciseRecordToList(exerciseRecord);  // 添加记录的方法
-
-            // 关闭 Dialog
-            dialog.dismiss();
         });
 
-        // 设置“取消”按钮
         Button noButton = dialog.findViewById(R.id.noButton);
-        noButton.setOnClickListener(v -> {
-            // 关闭 Dialog
-            dialog.dismiss();
-        });
+        noButton.setOnClickListener(v -> dialog.dismiss());
 
-        // 显示 Dialog
         dialog.show();
+    }
+
+
+    public static class ViewHolder {
+        TextView exerciseNameTextView;
+        TextView caloriesTextView;
     }
 }

@@ -48,6 +48,8 @@ public class ExerciseHistoryAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.exerciseNameTextView = convertView.findViewById(R.id.exerciseNameTextView);
             holder.exerciseDurationTextView = convertView.findViewById(R.id.exerciseDurationTextView);
+            holder.exerciseCaloriesTextView = convertView.findViewById(R.id.exerciseCaloriesTextView); // 新增
+            holder.exerciseDateTextView = convertView.findViewById(R.id.exerciseDateTextView); // 新增
             convertView.setTag(holder);  // 保存 ViewHolder 到 convertView 中
         } else {
             holder = (ViewHolder) convertView.getTag();  // 从 convertView 中获取 ViewHolder
@@ -57,8 +59,10 @@ public class ExerciseHistoryAdapter extends BaseAdapter {
         ExerciseRecord exerciseRecord = exerciseRecords.get(position);
 
         // 设置数据到视图中
-        holder.exerciseNameTextView.setText(exerciseRecord.getName());  // 假设你有 `getName()` 方法
+        holder.exerciseNameTextView.setText(exerciseRecord.getExerciseId());
         holder.exerciseDurationTextView.setText(String.format("%d分钟", exerciseRecord.getDuration()));
+        holder.exerciseCaloriesTextView.setText(String.format("%d千卡", exerciseRecord.getBurnedCaloris()));
+        holder.exerciseDateTextView.setText(exerciseRecord.getDate());
 
         return convertView;  // 返回当前项的视图
     }
@@ -67,5 +71,7 @@ public class ExerciseHistoryAdapter extends BaseAdapter {
     static class ViewHolder {
         TextView exerciseNameTextView;
         TextView exerciseDurationTextView;
+        TextView exerciseCaloriesTextView;  // 新增
+        TextView exerciseDateTextView;  // 新增
     }
 }

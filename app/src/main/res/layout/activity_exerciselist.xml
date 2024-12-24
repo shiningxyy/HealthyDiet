@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     android:background="@color/unselected_item_color">
 
-    <!-- 右侧食物列表，网格布局显示食物和热量 -->
     <ListView
         android:id="@+id/exerciseItemsListView"
         android:layout_width="0dp"
