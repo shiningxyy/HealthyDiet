@@ -127,9 +127,16 @@ public class WebSocketManager {
                 }
             } 
             // 如果是数组格式，直接当作食物列表处理
-            else if (message.startsWith("[")) {
+            else if (message.startsWith("[") && !message.contains("caloriesPerHour")) {
                 Log.d("WebSocket", "Received array message, treating as food list");
                 WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_LIST);
+                if (callback != null) {
+                    handler.post(() -> callback.onMessage(message));
+                }
+            }
+            else if (message.startsWith("[") && message.contains("caloriesPerHour")) {
+                Log.d("WebSocket", "Received array message, treating as exercise list");
+                WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_LIST);
                 if (callback != null) {
                     handler.post(() -> callback.onMessage(message));
                 }
