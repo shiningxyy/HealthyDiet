@@ -66,13 +66,13 @@
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
 
-        <!-- 设置提醒按钮 -->
+
         <Button
-            android:id="@+id/setReminderButton"
+            android:id="@+id/logoutButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#F6CB81"
-            android:text="设置提醒"
+            android:text="登出"
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
     </LinearLayout>

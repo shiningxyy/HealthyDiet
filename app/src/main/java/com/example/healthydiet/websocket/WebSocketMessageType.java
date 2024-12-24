@@ -5,5 +5,7 @@ public class WebSocketMessageType {
     public static final String REGISTER = "register";
     public static final String FOOD_LIST = "getAllFood";
     public static final String FOOD_RECORD_ADD = "addFoodRecord";
+    public static final String FOOD_RECORD_GET="getAllFoodRecord";
+    public static final String FOOD_ITEM_GET="getFoodItemById";
     // 添加其他消息类型...
 } 

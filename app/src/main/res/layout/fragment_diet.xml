@@ -78,6 +78,7 @@
         app:layout_constraintTop_toBottomOf="@id/progressCardView" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -89,7 +90,6 @@
             android:id="@+id/breakfastButton"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-
             android:backgroundTint="#8BC34A"
             android:text=" 记早餐"
             app:icon="@drawable/ic_breakfast"
@@ -103,7 +103,6 @@
             android:id="@+id/lunchButton"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-
             android:backgroundTint="#8BC34A"
             android:text=" 记午餐"
             app:icon="@drawable/ic_lunch"
@@ -117,7 +116,6 @@
             android:id="@+id/dinnerButton"
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-
             android:backgroundTint="#8BC34A"
             android:text=" 记晚餐"
             app:icon="@drawable/ic_dinner"
@@ -129,6 +127,19 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <Button
+        android:id="@+id/viewRecordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="#FF7C87"
+        android:text="查看饮食记录"
+        app:iconPadding="1dp"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/circularButton"
         android:layout_width="80dp"
@@ -136,8 +147,6 @@
         android:layout_centerInParent="true"
         android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
-
-
         app:backgroundTint="#8BC34A"
         app:icon="@drawable/ic_camera"
         app:iconSize="32dp"

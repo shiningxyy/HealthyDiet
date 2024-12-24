@@ -69,16 +69,14 @@ public class AddFoodRecordActivity extends AppCompatActivity {
 
         addButton.setOnClickListener(v -> {
             weightEditText = findViewById(R.id.food_weight);
-            int weight = Integer.parseInt(weightEditText.getText().toString().trim());
-            int sumCalories=foodCalories*weight/100;
+            double weight = Double.parseDouble(weightEditText.getText().toString().trim());
+            int sumCalories= (int) (foodCalories*weight/100);
             double sumFat=foodFat*weight/100;
             double sumProtein=foodProtein*weight/100;
             double sumCarbohydrates=foodCarbohydrates*weight/100;
             double sumDietaryFiber=foodDietaryFiber*weight/100;
             double sumPotassium=foodPotassium*weight/100;
             double sumSodium=foodSodium*weight/100;
-
-
 
                 if (weight<=0) {
                     Toast.makeText(AddFoodRecordActivity.this, "请输入食物克数", Toast.LENGTH_SHORT).show();
@@ -105,23 +103,31 @@ public class AddFoodRecordActivity extends AppCompatActivity {
                             "}";
                     Log.d("addFoodRecord", "Sending register message: " + addMessage);
 
+
+
                     if (!webSocketManager.isConnected()) {
                         Log.d("RegisterActivity", "WebSocket not connected, attempting to reconnect...");
                         webSocketManager.reconnect();
                     }
-                    webSocketManager.sendMessage(addMessage);
+
+                        Log.d("AddFoodRecord", "WebSocket connected successfully");
+                        webSocketManager.sendMessage(addMessage);
+
+
                 }
         });
 
 
         webSocketManager = WebSocketManager.getInstance();
         webSocketManager.logConnectionStatus();  // 记录连接状态
+        Log.d("AddFoodRecord", "注册回调之前");
 
         webSocketManager.registerCallback(WebSocketMessageType.FOOD_RECORD_ADD, message -> {
             Log.d("AddFoodRecord", "注册回调");
             try {
                 JSONObject response = new JSONObject(message);
-                if (response.optString("status").equals(200)) {
+                Log.d("AddFoodRecord", "message:"+message);
+                if (response.optInt("status") == 200) {
                     Log.d("AddFoodRecord", "Add successful");
                     Toast.makeText(AddFoodRecordActivity.this, "Add food record successful", Toast.LENGTH_SHORT).show();
                     intent.set(new Intent(AddFoodRecordActivity.this, FoodlistActivity.class));
@@ -129,9 +135,9 @@ public class AddFoodRecordActivity extends AppCompatActivity {
 
                     finish();
                 } else {
-                    Log.d("AddFoodRecord", "add failed");
+                    Log.d("AddFoodRecord", "返回的不是200");
                     runOnUiThread(() ->
-                            Toast.makeText(AddFoodRecordActivity.this, "add failed", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(AddFoodRecordActivity.this, "返回的不是200", Toast.LENGTH_SHORT).show()
                     );
                 }
             } catch (Exception e) {
@@ -140,5 +146,10 @@ public class AddFoodRecordActivity extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        webSocketManager.unregisterCallback(WebSocketMessageType.FOOD_RECORD_ADD);
     }
 }

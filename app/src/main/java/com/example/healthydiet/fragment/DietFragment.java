@@ -15,6 +15,7 @@ import com.example.healthydiet.R;
 import com.example.healthydiet.activity.FoodlistActivity;
 import com.example.healthydiet.activity.MainActivity;
 import com.example.healthydiet.activity.RegisterActivity;
+import com.example.healthydiet.activity.ViewFoodRecordActivity;
 import com.example.healthydiet.entity.User;
 
 // DietFragment.java
@@ -24,6 +25,7 @@ public class DietFragment extends Fragment {
     private Button breakfast_button;
     private Button lunch_button;
     private Button dinner_button;
+    private Button view_record;
     //private User user;
     public DietFragment() {
         // Required empty public constructor
@@ -79,6 +81,16 @@ public class DietFragment extends Fragment {
             Intent intent = new Intent(getActivity(), FoodlistActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
             // 将 user 对象传递给目标 Activity
             //intent.putExtra("user", user); // 将 user 对象作为 Extra 传递
+            startActivity(intent);
+        });
+
+        // 初始化跳转按钮
+        view_record = view.findViewById(R.id.viewRecordButton);
+        // 设置按钮点击事件，跳转到另一个 Activity
+        view_record.setOnClickListener(v -> {
+            // 使用 Intent 跳转到新的 Activity
+            Intent intent = new Intent(getActivity(), ViewFoodRecordActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+
             startActivity(intent);
         });
 
