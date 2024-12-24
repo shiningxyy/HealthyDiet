@@ -30,6 +30,24 @@ public class HomeActivity extends AppCompatActivity{
         // 获取底部导航栏
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
+        // 从 Intent 中获取传递的数据
+        Intent intent = getIntent();
+        int exerciseId = intent.getIntExtra("exerciseId", -1);
+        int caloriesPerHour = intent.getIntExtra("caloriesPerHour", 0);
+        String exerciseName = intent.getStringExtra("name");
+        int duration = intent.getIntExtra("duration", 0);
+        int burnedCalories = intent.getIntExtra("burnedCalories", 0);
+        String date = intent.getStringExtra("date");
+
+        // 创建 Bundle 并传递数据
+        Bundle bundle = new Bundle();
+        bundle.putInt("exerciseId", exerciseId);
+        bundle.putInt("caloriesPerHour", caloriesPerHour);
+        bundle.putString("name", exerciseName);
+        bundle.putInt("duration", duration);
+        bundle.putInt("burnedCalories", burnedCalories);
+        bundle.putString("date", date);
+
         // 默认显示 DietFragment
         if (savedInstanceState == null) {
             currentFragment = new DietFragment();

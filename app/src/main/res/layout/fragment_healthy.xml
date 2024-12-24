@@ -1,22 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-
     android:layout_height="match_parent">
 
     <!-- 标题栏 -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:background="#8BC34A"
         android:backgroundTint="#8CC34B"
         app:titleTextAppearance="@style/ToolbarTitleStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="健 康 管 理" />
+        app:title="健康管理" />
 
+    <!-- 运动趋势图 -->
+
+    <!-- 今日运动时间 -->
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/exerciseTrendGraph"
+        android:layout_width="380dp"
+        android:layout_height="241dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+    <TextView
+        android:id="@+id/todayExerciseTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="今日运动时间: 60分钟"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/exerciseTrendGraph"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- 消耗热量 -->
+    <TextView
+        android:id="@+id/todayCaloriesBurned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="消耗热量: 500千卡"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/todayExerciseTime"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp" />
+
+    <!-- 选择运动项目按钮 -->
+
+    <Button
+        android:id="@+id/goToExerciseSelectButton"
+        android:layout_width="236dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/unselected_item_color"
+        android:text="记录运动"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/todayCaloriesBurned" />
+
+    <ListView
+        android:id="@+id/exerciseListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/goToExerciseSelectButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

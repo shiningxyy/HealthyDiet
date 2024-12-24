@@ -149,7 +149,7 @@ public class WebSocketManager {
                     }
             } 
             // 如果是数组格式
-            else if (message.startsWith("[")) {
+            else if (message.startsWith("[")&& !message.contains("caloriesPerHour")) {
                 if(message.contains("foodRecordId")){
                     Log.d("WebSocket", "Received array message, treating as food record list");
                     WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_RECORD_GET);
@@ -165,6 +165,13 @@ public class WebSocketManager {
                     }
                 }
 
+            }
+            else if (message.startsWith("[") && message.contains("caloriesPerHour")) {
+                Log.d("WebSocket", "Received array message, treating as exercise list");
+                WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_LIST);
+                if (callback != null) {
+                    handler.post(() -> callback.onMessage(message));
+                }
             }
         } catch (Exception e) {
             Log.e("WebSocket", "Error handling message: " + e.getMessage());
