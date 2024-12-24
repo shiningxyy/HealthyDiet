@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.healthydiet.R;
+import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
 
@@ -40,6 +41,7 @@ public class FoodlistActivity extends AppCompatActivity implements SidebarAdapte
     private RecyclerView foodListRecyclerView;
     private SidebarAdapter sidebarAdapter;
     private FoodListAdapter foodListAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,9 @@ public class FoodlistActivity extends AppCompatActivity implements SidebarAdapte
                             foodJson.getDouble("carbohydrates"),
                             foodJson.getDouble("dietaryFiber"),
                             foodJson.getDouble("potassium"),
-                            foodJson.getDouble("sodium")
+                            foodJson.getDouble("sodium"),
+                            foodJson.getDouble("fat"),
+                            foodJson.getDouble("protein")
                     );
                     int id = foodJson.getInt("foodid");
                     foodItem.setFoodid(id);
