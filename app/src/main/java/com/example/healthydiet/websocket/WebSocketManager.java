@@ -107,7 +107,7 @@ public class WebSocketManager {
                     JSONObject partialJson = new JSONObject();
                     partialJson.put("status", 200);
                  //   partialJson.put("message", "注册成功");
-                    String type = determineMessageType(partialJson);
+                    String type = WebSocketMessageType.REGISTER;
                     WebSocketCallback callback = callbackMap.get(type);
                     if (callback != null) {
                         Log.d("WebSocket", "Found callback for register response");
@@ -137,8 +137,18 @@ public class WebSocketManager {
                     }
                     return;
                 }
-                    JSONObject jsonMessage = new JSONObject(message);
-                    String type = determineMessageType(jsonMessage);
+                else if(message.contains("用户信息更新成功")){
+                    String type = WebSocketMessageType.UPDATE_USER;
+                    WebSocketCallback callback = callbackMap.get(type);
+                    if (callback != null) {
+                        Log.d("WebSocket", "Found callback for add food record response");
+                        Log.d("WebSocket", message);
+                        handler.post(() -> callback.onMessage(message));
+                    }
+                    return;
+                }
+                    else{//登录
+                    String type = WebSocketMessageType.LOGIN;
                     Log.d("WebSocket", "Determined message type: " + type);
                     WebSocketCallback callback = callbackMap.get(type);
                     if (callback != null) {
@@ -147,6 +157,8 @@ public class WebSocketManager {
                     } else {
                         Log.d("WebSocket", "No callback found for type: " + type);
                     }
+                }
+
             } 
             // 如果是数组格式
             else if (message.startsWith("[")&& !message.contains("caloriesPerHour")) {

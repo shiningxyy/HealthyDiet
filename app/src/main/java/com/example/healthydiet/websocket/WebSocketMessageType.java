@@ -7,7 +7,7 @@ public class WebSocketMessageType {
     public static final String FOOD_RECORD_ADD = "addFoodRecord";
     public static final String FOOD_RECORD_GET="getAllFoodRecord";
     public static final String FOOD_ITEM_GET="getFoodItemById";
-
     public static final String EXERCISE_LIST = "getAllExerciseItem";
+    public static final String UPDATE_USER="updateUser";
     // 添加其他消息类型...
 } 

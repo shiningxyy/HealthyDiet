@@ -32,7 +32,7 @@
         <activity android:name=".activity.AddFoodRecordActivity" />
         <activity android:name=".activity.ViewFoodRecordActivity" />
         <activity android:name=".activity.ExerciselistActivity" />
-
+        <activity android:name=".activity.ModifyInfoActivity"/>
     </application>
 
 </manifest>

@@ -45,7 +45,6 @@ public class HealthyFragment extends Fragment {
     private TextView todayExerciseTime, todayCaloriesBurned;
     private List<ExerciseRecord> exerciseRecords = new ArrayList<>();
     private ExerciseHistoryAdapter adapter;
-
     private WebSocketManager webSocketManager;
 
 //    @Override
