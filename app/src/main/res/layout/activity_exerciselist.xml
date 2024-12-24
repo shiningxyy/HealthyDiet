@@ -1,0 +1,16 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/unselected_item_color">
+
+    <ListView
+        android:id="@+id/exerciseItemsListView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:scrollbars="vertical"
+        android:background="@color/white"
+        android:dividerHeight="0.5dp" />
+
+</LinearLayout>

@@ -4,5 +4,8 @@ public class WebSocketMessageType {
     public static final String LOGIN = "login";
     public static final String REGISTER = "register";
     public static final String FOOD_LIST = "getAllFood";
+
+    public static final String EXERCISE_LIST = "getAllExerciseItem";
+
     // 添加其他消息类型...
 } 
