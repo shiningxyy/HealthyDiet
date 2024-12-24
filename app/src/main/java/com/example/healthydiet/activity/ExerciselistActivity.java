@@ -1,5 +1,7 @@
 package com.example.healthydiet.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -19,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,6 +35,8 @@ public class ExerciselistActivity extends AppCompatActivity{
 
     private WebSocketManager webSocketManager;
     private Handler handler;
+    private Context context;
+
     private ListView exerciseListView;
     private SidebarAdapter sidebarAdapter;
     private ExerciseItemsAdapter exersiceListAdapter;
@@ -39,6 +44,24 @@ public class ExerciselistActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exerciselist);
+
+        // 初始化 Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // 设置返回按钮的点击事件
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
+            getSupportActionBar().setDisplayShowHomeEnabled(true);  // 启用返回按钮图标
+        }
+
+        // 返回按钮的点击监听器
+        toolbar.setNavigationOnClickListener(v -> {
+            Intent intent = new Intent(ExerciselistActivity.this, HomeActivity.class);
+            intent.putExtra("fragment_key", "HealthyFragment");
+
+            startActivity(intent);
+        });
 
         // 初始化 Handler，用于在主线程更新 UI
         handler = new Handler(getMainLooper());

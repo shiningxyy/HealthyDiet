@@ -1,45 +1,28 @@
 package com.example.healthydiet.entity;
 
 public class ExerciseRecord {
-    private int exerciseRecordId;
-    private int exerciseId;
-    private int userId;
+    private String exerciseName;
     private String date;
     private String duration;
     private int burnedCaloris;
 
     // 完整构造函数
-    public ExerciseRecord(int exerciseId, String date, String duration, int burnedCaloris) {
-        this.exerciseId = exerciseId;
+    public ExerciseRecord(String exerciseName, String date, String duration, int burnedCaloris) {
+        this.exerciseName = exerciseName;
         this.date = date;
         this.duration = duration;
         this.burnedCaloris = burnedCaloris;
     }
 
     // Getter 和 Setter 方法
-    public int getExerciseId() {
-        return exerciseId;
+    public String getexerciseName() {
+        return exerciseName;
     }
 
-    public void setExerciseId(int exerciseId) {
-        this.exerciseId = exerciseId;
+    public void setexerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
     }
 
-    public int getExerciseRecordId() {
-        return exerciseRecordId;
-    }
-
-    public void setExerciseRecordId(int exerciseRecordId) {
-        this.exerciseRecordId = exerciseRecordId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 
     public String getDate() {
         return date;

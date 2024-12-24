@@ -78,81 +78,45 @@ public class HealthyFragment extends Fragment {
         todayExerciseTime = view.findViewById(R.id.todayExerciseTime);
         todayCaloriesBurned = view.findViewById(R.id.todayCaloriesBurned);
 
-//        // 获取传递过来的数据
-//        Bundle bundle = getArguments();
-//        if (bundle != null) {
-//            int exerciseId = bundle.getInt("exerciseId", -1);
-//            int caloriesPerHour = bundle.getInt("caloriesPerHour", 0);
-//            String exerciseName = bundle.getString("name");
-//            int duration = bundle.getInt("duration", 0);
-//            int burnedCalories = bundle.getInt("burnedCalories", 0);
-//            String date = bundle.getString("date");
-//
-//            // 创建新的运动记录
-//            ExerciseRecord newExerciseRecord = new ExerciseRecord(exerciseId, date, String.valueOf(duration), burnedCalories);
-//
-//            // 将新记录添加到 exerciseRecords 列表
-//            exerciseRecords.add(newExerciseRecord);
-//
-//            // 更新 ListView
-//
-//            String addMessage = "addExerciseRecord:{" +
-//                    "\"exerciseId\": \"" +exerciseId + "\"," +"\"duration\": \""+duration + "\"," +
-//                    "\"date\": \"" + date + "\"" +
-//                    "}";
-//            Log.d("addMessage", "Sending login message: " + addMessage);
-//
-//
-//            if (!webSocketManager.isConnected()) {
-//                webSocketManager.reconnect();
-//            }
-//            webSocketManager.sendMessage(addMessage);
-//
-//            // 初始化 ListView 适配器
-//            adapter = new ExerciseHistoryAdapter(getContext(), exerciseRecords);  // 适配器要传递上下文
-//            exerciseListView.setAdapter(adapter);
-//            adapter.notifyDataSetChanged(); // 刷新适配器
-//
-//        }
-
-        // 注册食物列表回调
-//        webSocketManager.registerCallback(WebSocketMessageType.EXERCISE_LIST, message -> {
-//            Log.d("ExerciseList", "Received exercise list response: " + message);
-//            try {
-//                JSONArray exerciseItems = new JSONArray(message);
-//                List<ExerciseItem> exerciseItemList = new ArrayList<>();
-//
-//                for (int i = 0; i < exerciseItems.length(); i++) {
-//                    JSONObject exerciseJson = exerciseItems.getJSONObject(i);
-//                    ExerciseItem exerciseItem = new ExerciseItem(
-//                            exerciseJson.getString("name"),
-//                            exerciseJson.getDouble("caloriesPerHour")
-//                    );
-//                    int id = exerciseJson.getInt("exerciseId");
-//                    Log.d("ExerciseList", "id: " + id);
-//
-//                    exerciseItem.setExerciseId(id);
-//                    exerciseItemList.add(exerciseItem);
-//                }
-//
-//
-//
-//                // 在主线程更新UI
-//                getActivity().runOnUiThread(() -> onExerciseListUpdated(exerciseItemList));            } catch (Exception e) {
-//                Log.e("ExerciseList", "Error processing exerecise list: " + e.getMessage());
-//                e.printStackTrace();
-//            }
-//        });
-//        if (!webSocketManager.isConnected()) {
-//            Log.d("ExerciseList", "WebSocket not connected, attempting to reconnect...");
-//            webSocketManager.reconnect();
-//        }
-//
-//        webSocketManager.sendMessage("getAllExerciseItem");
-
         // 初始化 ListView 适配器
-        adapter = new ExerciseHistoryAdapter(getContext(), exerciseRecords);  // 适配器要传递上下文
+        adapter = new ExerciseHistoryAdapter(getContext(), exerciseRecords);  // 适配器传递上下文
         exerciseListView.setAdapter(adapter);
+        User user = UserManager.getInstance().getUser();
+        // 注册 WebSocket 回调
+        webSocketManager.registerCallback(WebSocketMessageType.EXERCISE_RECORD_GET, message -> {
+            Log.d("ExerciseRecord", "Received ExerciseRecord list response: " + message);
+            try {
+                // 假设后端返回的是一个 JSON 数组
+                JSONArray exerciseRecords = new JSONArray(message);
+                List<ExerciseRecord> exerciseRecordList = new ArrayList<>();
+
+                for (int i = 0; i < exerciseRecords.length(); i++) {
+                    JSONObject exerciseJson = exerciseRecords.getJSONObject(i);
+                    ExerciseRecord exerciseRecord = new ExerciseRecord(
+                            exerciseJson.getString("exerciseName"),
+                            exerciseJson.getString("date"),
+                            exerciseJson.getString("duration"),
+                            exerciseJson.getInt("burnedCaloris")
+                    );
+                    exerciseRecordList.add(exerciseRecord);
+                }
+
+                // 在主线程更新 UI
+                getActivity().runOnUiThread(() -> updateExerciseListView(exerciseRecordList));
+
+            } catch (Exception e) {
+                Log.e("ExerciseList", "Error processing exercise list: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+
+        String getUserExerciseRecordMessage = "getUserExerciseRecord:" +user.getUserId();
+        Log.d("ExerciseList", "Sending ExerciseList message: " + getUserExerciseRecordMessage);
+        if (!webSocketManager.isConnected()) {
+            webSocketManager.reconnect();
+        }
+        webSocketManager.sendMessage(getUserExerciseRecordMessage);
+
 
         // 设置运动趋势图
         setupExerciseTrendGraph();
@@ -160,38 +124,20 @@ public class HealthyFragment extends Fragment {
         // 设置今日运动信息
         updateTodayExerciseInfo();
 
-        adapter.notifyDataSetChanged(); // 刷新适配器
-
         // 跳转到运动选择界面
         goToExerciseSelectButton.setOnClickListener(v -> onSelectExerciseClicked());
 
         return view;
     }
-//    public static HealthyFragment newInstance(ExerciseItem exerciseItem) {
-//        FoodDetailsFragment fragment = new FoodDetailsFragment();
-//        Bundle args = new Bundle();
-//        args.putString("food_name", foodItem.getName());
-//        args.putInt("food_calories", foodItem.getCalories());
-//        args.putInt("food_fat", foodItem.getFat());
-//        args.putInt("food_protein", foodItem.getProtein());
-//        args.putInt("food_carbohydrates", foodItem.getCarbohydrates());
-//        args.putInt("food_id", foodItem.getFoodid());
-//        args.putInt("food_DietaryFiber", foodItem.getDietaryFiber());
-//        args.putInt("food_Potassium", foodItem.getPotassium());
-//        args.putInt("food_Sodium", foodItem.getSodium());
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-    // 设置运动趋势图（HelloChart）
 
-//    private void onExerciseListUpdated(List<ExerciseItem> exerciseItemList) {
-//
-//        exerciseListView = findViewById(R.id.exerciseItemsListView);
-//
-//        exersiceListAdapter = new ExerciseItemsAdapter(exerciseItemList,this);
-//        exerciseListView.setAdapter(exersiceListAdapter);
-//
-//    }
+    private void updateExerciseListView(List<ExerciseRecord> exerciseRecordList) {
+        // 使用新的数据更新适配器
+
+        adapter = new ExerciseHistoryAdapter(getContext(), exerciseRecordList);  // 适配器传递上下文
+        exerciseListView.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
+    }
     private void setupExerciseTrendGraph() {
         // 模拟数据
         ArrayList<BarEntry> entries = new ArrayList<>();

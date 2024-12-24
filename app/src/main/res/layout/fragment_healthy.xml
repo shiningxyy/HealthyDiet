@@ -20,14 +20,12 @@
 
     <!-- 运动趋势图 -->
 
-    <!-- 今日运动时间 -->
-
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/exerciseTrendGraph"
-        android:layout_width="380dp"
-        android:layout_height="241dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="16dp"
+        android:layout_width="389dp"
+        android:layout_height="245dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
@@ -53,7 +51,6 @@
         android:layout_marginTop="8dp" />
 
     <!-- 选择运动项目按钮 -->
-
     <Button
         android:id="@+id/goToExerciseSelectButton"
         android:layout_width="236dp"
@@ -67,11 +64,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/todayCaloriesBurned" />
 
+    <!-- ListView -->
     <ListView
         android:id="@+id/exerciseListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/goToExerciseSelectButton" />
+        app:layout_constraintTop_toBottomOf="@id/goToExerciseSelectButton"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

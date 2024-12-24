@@ -1,6 +1,7 @@
 package com.example.healthydiet.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,10 +58,11 @@ public class ExerciseHistoryAdapter extends BaseAdapter {
 
         // 获取当前的 ExerciseRecord
         ExerciseRecord exerciseRecord = exerciseRecords.get(position);
+        Log.d("ExerciseList", "message "+exerciseRecord.getexerciseName());
 
         // 设置数据到视图中
-        holder.exerciseNameTextView.setText(exerciseRecord.getExerciseId());
-        holder.exerciseDurationTextView.setText(String.format("%d分钟", exerciseRecord.getDuration()));
+        holder.exerciseNameTextView.setText(exerciseRecord.getexerciseName());
+        holder.exerciseDurationTextView.setText(exerciseRecord.getDuration()+"分钟");
         holder.exerciseCaloriesTextView.setText(String.format("%d千卡", exerciseRecord.getBurnedCaloris()));
         holder.exerciseDateTextView.setText(exerciseRecord.getDate());
 

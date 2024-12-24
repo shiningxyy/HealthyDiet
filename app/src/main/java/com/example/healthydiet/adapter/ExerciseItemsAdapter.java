@@ -2,6 +2,7 @@ package com.example.healthydiet.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.healthydiet.UserManager;
 import com.example.healthydiet.activity.HomeActivity;
 import com.example.healthydiet.activity.MainActivity;
 import com.example.healthydiet.entity.ExerciseItem;
 import com.example.healthydiet.entity.ExerciseRecord;
 import com.example.healthydiet.R;
+import com.example.healthydiet.entity.User;
+import com.example.healthydiet.websocket.WebSocketManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +29,7 @@ import android.content.Intent;
 public class ExerciseItemsAdapter extends BaseAdapter {
     private List<ExerciseItem> exerciseItems;
     private Context context;
+    private WebSocketManager webSocketManager;
 
     public ExerciseItemsAdapter(List<ExerciseItem> exerciseItems, Context context) {
         this.exerciseItems = exerciseItems;
@@ -84,6 +89,36 @@ public class ExerciseItemsAdapter extends BaseAdapter {
 
         Button yesButton = dialog.findViewById(R.id.yesButton);
         yesButton.setOnClickListener(v -> {
+            webSocketManager = WebSocketManager.getInstance();
+            User user = UserManager.getInstance().getUser();
+            String durationStr = exerciseDurationEditText.getText().toString();
+            int duration = 0;
+
+            if (!durationStr.isEmpty()) {
+                duration = Integer.parseInt(durationStr);  // 获取运动时长
+            }
+            int hours = duration / 60;
+
+            // 计算剩余的分钟数
+            int minutes = duration % 60;
+
+            // 秒数固定为 0
+            int seconds = 0;
+
+            // 将结果格式化为 HH:mm:ss 形式
+            String formattedTime = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+
+            // 输出结果
+            String addExerciseRecordMessage = "addExerciseRecord:{" +
+                    "\"exerciseId\": \"" + exerciseItem.getExerciseId() + "\"," +
+                    "\"duration\": \"" + formattedTime +"\"," +"\"date\": \"" + getCurrentTime() +
+                    "\"" +"}";
+            Log.d("MainActivity", "Sending login message: " + addExerciseRecordMessage);
+            if (!webSocketManager.isConnected()) {
+                webSocketManager.reconnect();
+            }
+            webSocketManager.sendMessage(addExerciseRecordMessage);
+
 //            String durationStr = exerciseDurationEditText.getText().toString();
 //            int duration = 0;
 //
@@ -95,7 +130,6 @@ public class ExerciseItemsAdapter extends BaseAdapter {
 //            int burnedCalories = (int) ((exerciseItem.getCaloriesPerHour() / 60) * duration);
 //
 //            // 跳转到 FoodRecord 页面
-//            Intent intent = new Intent(context, HomeActivity.class);
 //            // 你可以将 foodItem 的相关数据传递到 FoodRecordActivity
 //            intent.putExtra("exerciseId", exerciseItem.getExerciseId());
 //            intent.putExtra("caloriesPerHour", exerciseItem.getCaloriesPerHour());
