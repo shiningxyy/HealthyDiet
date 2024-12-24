@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="食物列表"
+        app:title="运动项目"
         app:titleTextAppearance="@style/ToolbarTitleStyle"
         app:navigationIcon="@android:drawable/ic_menu_revert"/>
 
