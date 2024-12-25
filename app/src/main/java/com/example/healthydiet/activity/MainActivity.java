@@ -12,7 +12,8 @@ import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
 import com.google.android.material.textfield.TextInputEditText;
-
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,7 +45,9 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Please enter your password.", Toast.LENGTH_SHORT).show();
             } else {
                 Log.d("MainActivity", "Attempting login with phone: " + phone);
-                performLogin(phone, password);
+                // 密码加密
+                String encryptedPassword = encryptPassword(password);
+                performLogin(phone, encryptedPassword);  // 发送加密后的密码
             }
         });
 
@@ -93,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
                     finish();
                 } else {
-                    Log.d("MainActivity", "Login failed: phone numbers don't match");
+                    Log.d("MainActivity", "账号或密码错误");
                     // 登录失败处理
                     runOnUiThread(() -> 
                         Toast.makeText(MainActivity.this, "Login failed", Toast.LENGTH_SHORT).show()
@@ -106,9 +109,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void performLogin(String phone, String password) {
+    // 使用 SHA-256 对密码进行加密
+    private String encryptPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();  // 返回加密后的密码
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void performLogin(String phone, String encryptedPassword) {
         String loginMessage = "login:{" +
-                "\"password\": \"" + password + "\"," +
+                "\"password\": \"" + encryptedPassword + "\"," +  // 使用加密后的密码
                 "\"phone\": \"" + phone + "\"" +
                 "}";
         Log.d("MainActivity", "Sending login message: " + loginMessage);

@@ -16,6 +16,9 @@ import com.example.healthydiet.websocket.WebSocketMessageType;
 
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText phoneEditText, passwordEditText, usernameEditText, ageEditText, heightEditText, weightEditText;
@@ -49,10 +52,13 @@ public class RegisterActivity extends AppCompatActivity {
                     Log.d("RegisterActivity", "Register successful");
                     // 将消息字符串解析为 JSONObject
                     JSONObject response = new JSONObject(message);
+
+                    String userinfo = response.getString("user");
+                    JSONObject user_response=new JSONObject(userinfo);
                     // 提取 userId 字段
-                    int userId = response.getInt("userId");
-                    int isblocked=response.getInt("isblocked");
-                    String profilePicture=response.getString("profilePicture");
+                    int userId = user_response.getInt("userId");
+                    int isblocked=user_response.getInt("isblocked");
+                    String profilePicture=user_response.getString("profilePicture");
                     user.setProfilePicture(profilePicture);
                     user.setUserId(userId);
                     user.setIsblocked(isblocked);
@@ -92,21 +98,49 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (phone.isEmpty() || password.isEmpty() || username.isEmpty() || age <= 0 || height <= 0 || weight <= 0) {
                     Toast.makeText(RegisterActivity.this, "请填写所有字段", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else if(password.length()<6){
+                    Toast.makeText(RegisterActivity.this, "密码长度至少为6位", Toast.LENGTH_SHORT).show();
+                }
+                else if(!containsLetterAndDigit(password)){
+                    Toast.makeText(RegisterActivity.this, "密码必须同时包含数字和字母", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     // 创建 User 对象
                     user = new User(username, password, weight, age, height, phone);
-                    performRegister(user);
+                    // 密码加密
+                    String encryptedPassword = encryptPassword(password);
+                    performRegister(user,encryptedPassword);
                 }
             } catch (NumberFormatException e) {
                 Toast.makeText(RegisterActivity.this, "年龄、身高和体重必须是有效的数字", Toast.LENGTH_SHORT).show();
             }
         });
     }
+    public boolean containsLetterAndDigit(String input) {
+        // 判断字符串是否同时包含字母和数字
+        return input.matches(".*[a-zA-Z].*") && input.matches(".*\\d.*");
+    }
 
-    private void performRegister(User user) {
+    // 使用 SHA-256 对密码进行加密
+    private String encryptPassword(String password) {
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes());
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                hexString.append(String.format("%02x", b));
+            }
+            return hexString.toString();  // 返回加密后的密码
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    private void performRegister(User user,String encryptedPassword) {
         String registerMessage = "register:{" +
                 "\"name\": \"" + user.getName() + "\"," +
-                "\"password\": \"" + user.getPassword() + "\"," +
+                "\"password\": \"" + encryptedPassword + "\"," +
                 "\"weight\": " + user.getWeight() + "," +
                 "\"age\": " + user.getAge() + "," +
                 "\"height\": " + user.getHeight() + "," +
