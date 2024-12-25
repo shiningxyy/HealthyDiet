@@ -13,15 +13,19 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.healthydiet.activity.AllExerciseRecordActivity;
+import com.example.healthydiet.activity.FoodlistActivity;
 import com.example.healthydiet.adapter.ExerciseItemsAdapter;
 import com.example.healthydiet.entity.ExerciseItem;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import com.example.healthydiet.UserManager;
@@ -34,15 +38,23 @@ import com.example.healthydiet.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class HealthyFragment extends Fragment {
 
     private BarChart  exerciseTrendGraph;
     private ListView exerciseListView;  // 使用 ListView 替代 RecyclerView
     private Button goToExerciseSelectButton;
+    private Button all_record_button;
     private TextView todayExerciseTime, todayCaloriesBurned;
     private List<ExerciseRecord> exerciseRecords = new ArrayList<>();
     private ExerciseHistoryAdapter adapter;
@@ -119,12 +131,15 @@ public class HealthyFragment extends Fragment {
         webSocketManager.sendMessage(getUserExerciseRecordMessage);
 
 
-        // 设置运动趋势图
-        setupExerciseTrendGraph();
-
-        // 设置今日运动信息
-        updateTodayExerciseInfo();
-
+        all_record_button= view.findViewById(R.id.allRecordButton);
+        // 设置按钮点击事件，跳转到另一个 Activity
+        all_record_button.setOnClickListener(v -> {
+            // 使用 Intent 跳转到新的 Activity
+            Intent intent = new Intent(getActivity(), AllExerciseRecordActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            // 将 user 对象传递给目标 Activity
+            //intent.putExtra("user", user); // 将 user 对象作为 Extra 传递
+            startActivity(intent);
+        });
         // 跳转到运动选择界面
         goToExerciseSelectButton.setOnClickListener(v -> onSelectExerciseClicked());
 
@@ -148,22 +163,108 @@ public class HealthyFragment extends Fragment {
         exerciseListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
+        // 设置运动趋势图
+        setupExerciseTrendGraph(exerciseRecordList);
+
+        // 设置今日运动信息
+        updateTodayExerciseInfo(todayRecords);
     }
     private String getCurrentDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(new java.util.Date());
     }
 
-    private void setupExerciseTrendGraph() {
-        // 模拟数据
+    private void setupExerciseTrendGraph(List<ExerciseRecord> exerciseRecordList) {
+        // 获取当前日期并计算最近7天的日期
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate = new Date();
+        long currentTimeMillis = currentDate.getTime();
+        long sevenDaysAgoMillis = currentTimeMillis - (7L * 24 * 60 * 60 * 1000);  // 7天前的时间戳
+        Date sevenDaysAgoDate = new Date(sevenDaysAgoMillis);
+
+        // 创建一个 List 来存储最近7天的日期（按日期顺序）
+        List<String> recent7Days = new ArrayList<>();
+        for (int i = 6; i >= 0; i--) {
+            Date date = new Date(currentTimeMillis - (i * 24 * 60 * 60 * 1000));
+            recent7Days.add(dateFormat.format(date));  // 获取格式化后的日期
+        }
+
+        // 创建一个 Map 来存储每天的总运动时长（如果没有数据，则为0）
+        HashMap<String, Integer> dailyExerciseDurationMap = new HashMap<>();
+
+        // 默认每天的运动时长为 0
+        for (String date : recent7Days) {
+            dailyExerciseDurationMap.put(date, 0);
+        }
+
+        // 遍历所有记录并累加每天的运动时长
+        for (ExerciseRecord record : exerciseRecordList) {
+            String date = record.getDate();  // 获取日期
+            try {
+                Date recordDate = dateFormat.parse(date);  // 将日期字符串转换为 Date 对象
+                if (recordDate.after(sevenDaysAgoDate) || recordDate.equals(sevenDaysAgoDate)) {
+                    String duration = record.getDuration();  // 获取运动时长（格式：HH:mm:ss）
+                    String[] timeParts = duration.split(":");  // 分割字符串为 [小时, 分钟, 秒]
+
+                    int hours = Integer.parseInt(timeParts[0]);
+                    int minutes = Integer.parseInt(timeParts[1]);
+                    int seconds = Integer.parseInt(timeParts[2]);
+
+                    // 将时间转换为分钟
+                    int totalMinutes = (hours * 60) + minutes + (seconds / 60);
+
+                    // 累加该日期的运动时长
+                    if (dailyExerciseDurationMap.containsKey(date)) {
+                        int existingDuration = dailyExerciseDurationMap.get(date);
+                        dailyExerciseDurationMap.put(date, existingDuration + totalMinutes);
+                    } else {
+                        dailyExerciseDurationMap.put(date, totalMinutes);
+                    }
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // 将 Map 转换为 List 以便排序
+        List<Map.Entry<String, Integer>> sortedEntries = new ArrayList<>(dailyExerciseDurationMap.entrySet());
+
+        // 使用比较器按日期排序
+        Collections.sort(sortedEntries, new Comparator<Map.Entry<String, Integer>>() {
+            @Override
+            public int compare(Map.Entry<String, Integer> entry1, Map.Entry<String, Integer> entry2) {
+                try {
+                    Date date1 = dateFormat.parse(entry1.getKey());
+                    Date date2 = dateFormat.parse(entry2.getKey());
+                    return date1.compareTo(date2);  // 按日期排序
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                return 0;
+            }
+        });
+
+        // 创建一个 ArrayList 来存放 BarEntry
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(0, 10));  // 第一个数据点: x=0, y=10
-        entries.add(new BarEntry(1, 20));  // 第二个数据点: x=1, y=20
-        entries.add(new BarEntry(2, 30));  // 第三个数据点: x=2, y=30
+        ArrayList<String> xLabels = new ArrayList<>();
+
+        // 将排序后的数据填充到 BarEntry 和 X 轴标签中
+        int index = 0;
+        for (Map.Entry<String, Integer> entry : sortedEntries) {
+            String date = entry.getKey();  // 日期
+            int totalDuration = entry.getValue();  // 总运动时长（分钟）
+
+            // 将 x 轴的索引值设置为当前索引，y 轴为总运动时长
+            entries.add(new BarEntry(index, totalDuration));
+
+            // 将日期添加到 X 轴标签
+            xLabels.add(date);
+            index++;
+        }
 
         // 创建数据集
         BarDataSet dataSet = new BarDataSet(entries, "运动时间 (分钟)");
-        dataSet.setColor(getResources().getColor(android.R.color.holo_green_light));  // 使用预定义的绿色
+        dataSet.setColor(getResources().getColor(android.R.color.holo_green_light));  // 设置条形图的颜色
 
         // 创建 BarData
         BarData barData = new BarData(dataSet);
@@ -171,14 +272,45 @@ public class HealthyFragment extends Fragment {
         // 设置数据给 BarChart
         exerciseTrendGraph.setData(barData);
 
+        // 设置图表的 X 轴标签
+        XAxis xAxis = exerciseTrendGraph.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(xLabels));  // 设置 X 轴的标签
+
         // 刷新图表
         exerciseTrendGraph.invalidate();
     }
 
+
+
+    // 获取今天日期的方法
+    private String getTodayDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(new Date());  // 获取今天的日期，格式如 "2024-12-25"
+    }
+
     // 更新今日运动信息
-    private void updateTodayExerciseInfo() {
-        todayExerciseTime.setText("今日运动时间: 60分钟");
-        todayCaloriesBurned.setText("消耗热量: 500千卡");
+    private void updateTodayExerciseInfo(List<ExerciseRecord> allRecords) {
+        float totalExerciseTime = 0;
+        float totalCaloriesBurned = 0;
+
+        // 遍历所有运动记录，筛选出今日的记录并累加
+        for (ExerciseRecord record : allRecords) {
+            String duration=record.getDuration();
+            String[] timeParts = duration.split(":"); // 分割字符串为 [小时, 分钟, 秒]
+
+            int hours = Integer.parseInt(timeParts[0]);
+            int minutes = Integer.parseInt(timeParts[1]);
+            int seconds = Integer.parseInt(timeParts[2]);
+
+            // 将时间转换为分钟
+            int durationtime = (hours * 60) + minutes + (seconds / 60);
+                totalExerciseTime += durationtime; // 累加今日的运动时长
+                totalCaloriesBurned += record.getBurnedCaloris();  // 累加今日的消耗热量
+        }
+
+        // 更新UI
+        todayExerciseTime.setText("今日运动时间: " + totalExerciseTime + "分钟");
+        todayCaloriesBurned.setText("消耗热量: " + totalCaloriesBurned + "千卡");
     }
 
     // 跳转到运动项目选择界面

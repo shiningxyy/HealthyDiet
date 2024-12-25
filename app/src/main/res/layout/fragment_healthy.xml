@@ -20,12 +20,13 @@
         app:title="健康管理" />
 
     <!-- 运动趋势图 -->
+
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/exerciseTrendGraph"
-        android:layout_width="389dp"
-        android:layout_height="245dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="12dp"
+        android:layout_width="402dp"
+        android:layout_height="249dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
@@ -53,8 +54,8 @@
     <!-- 选择运动项目按钮 -->
     <Button
         android:id="@+id/goToExerciseSelectButton"
-        android:layout_width="340dp"
-        android:layout_height="47dp"
+        android:layout_width="366dp"
+        android:layout_height="51dp"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/unselected_item_color"
         android:text="记录运动"
@@ -65,6 +66,22 @@
         app:layout_constraintTop_toBottomOf="@id/todayCaloriesBurned" />
 
     <!-- 今日记录标题 -->
+
+    <Button
+        android:id="@+id/allRecordButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:text="查看所有记录>>"
+        android:textAllCaps="false"
+        android:textColor="#4CAF50"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/goToExerciseSelectButton" />
+
     <TextView
         android:id="@+id/todayRecordsTitle"
         android:layout_width="wrap_content"
