@@ -129,10 +129,10 @@
 
     <Button
         android:id="@+id/viewRecordButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="402dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#FF7C87"
         android:text="查看饮食记录"
         app:iconPadding="1dp"

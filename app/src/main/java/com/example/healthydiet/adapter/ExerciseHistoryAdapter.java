@@ -60,9 +60,19 @@ public class ExerciseHistoryAdapter extends BaseAdapter {
         ExerciseRecord exerciseRecord = exerciseRecords.get(position);
         Log.d("ExerciseList", "message "+exerciseRecord.getexerciseName());
 
+        String duration=(exerciseRecord.getDuration());
+
+        String[] timeParts = duration.split(":"); // 分割字符串为 [小时, 分钟, 秒]
+
+        int hours = Integer.parseInt(timeParts[0]);
+        int minutes = Integer.parseInt(timeParts[1]);
+        int seconds = Integer.parseInt(timeParts[2]);
+
+        // 将时间转换为分钟
+        int durationtime = (hours * 60) + minutes + (seconds / 60);
         // 设置数据到视图中
         holder.exerciseNameTextView.setText(exerciseRecord.getexerciseName());
-        holder.exerciseDurationTextView.setText(exerciseRecord.getDuration()+"分钟");
+        holder.exerciseDurationTextView.setText(String.format("%d分钟", durationtime));
         holder.exerciseCaloriesTextView.setText(String.format("%d千卡", exerciseRecord.getBurnedCaloris()));
         holder.exerciseDateTextView.setText(exerciseRecord.getDate());
 
