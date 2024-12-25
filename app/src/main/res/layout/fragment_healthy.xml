@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="健康管理" />
+        app:title="健 康 管 理" />
 
     <!-- 运动趋势图 -->
 
