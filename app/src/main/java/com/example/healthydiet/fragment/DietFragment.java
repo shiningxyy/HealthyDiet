@@ -2,6 +2,7 @@ package com.example.healthydiet.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,27 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.healthydiet.R;
+import com.example.healthydiet.UserManager;
 import com.example.healthydiet.activity.FoodlistActivity;
 import com.example.healthydiet.activity.MainActivity;
 import com.example.healthydiet.activity.RegisterActivity;
 import com.example.healthydiet.activity.ViewFoodRecordActivity;
+import com.example.healthydiet.adapter.FoodRecordAdapter;
+import com.example.healthydiet.entity.FoodRecord;
 import com.example.healthydiet.entity.User;
+import com.example.healthydiet.websocket.WebSocketManager;
+import com.example.healthydiet.websocket.WebSocketMessageType;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 // DietFragment.java
 public class DietFragment extends Fragment {
@@ -26,6 +43,8 @@ public class DietFragment extends Fragment {
     private Button lunch_button;
     private Button dinner_button;
     private Button view_record;
+    private WebSocketManager webSocketManager;
+    private List<FoodRecord> FoodRecordList;
     //private User user;
     public DietFragment() {
         // Required empty public constructor
@@ -36,20 +55,50 @@ public class DietFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_diet, container, false);
-        // 获取从 Activity 传递过来的 Bundle
-//        if (getArguments() != null) {
-//            user = (User) getArguments().getSerializable("user");
-//        }
-        // 初始化进度条
+
         circularProgressBar = view.findViewById(R.id.circularProgressBar);
         caloriesTextView = view.findViewById(R.id.caloriesTextView);
 
-        // 模拟从后端获取的 x 值（可以替换为实际的后端数据）
-        int x = 500; // 示例值，从后端获取的值
+        webSocketManager = WebSocketManager.getInstance();
+        webSocketManager.logConnectionStatus();  // 记录连接状态
 
-        // 更新进度条
-        updateProgressBar(x);
-        updateCaloriesText(x);
+        // 注册食物记录列表回调
+        webSocketManager.registerCallback(WebSocketMessageType.FOOD_RECORD_GET, message -> {
+            Log.d("FoodRecordList", "Received food record list response: " + message);
+            try {
+                JSONArray foodLists = new JSONArray(message);
+                FoodRecordList = new ArrayList<>();
+                int sum_calories=0;
+                for (int i = 0; i < foodLists.length(); i++) {
+                    JSONObject foodJson = foodLists.getJSONObject(i);
+                    String today=foodJson.getString("recordTime");
+                    if(istoday(today)){
+                        int calories= foodJson.getInt("calories");
+                        sum_calories+=calories;
+                    }
+                }
+                System.out.println("列表长度："+foodLists.length());
+                System.out.println("总卡路里："+sum_calories);
+
+                    // 更新进度条
+                    updateProgressBar(sum_calories);
+                    updateCaloriesText(sum_calories);
+
+            } catch (Exception e) {
+                Log.e("FoodRecordList", "Error processing food record list: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+
+        // 确保WebSocket已连接后再发送请求
+        if (!webSocketManager.isConnected()) {
+            Log.d("FoodRecordList", "WebSocket not connected, attempting to reconnect...");
+            webSocketManager.reconnect();
+        }
+        User user = UserManager.getInstance().getUser();
+        String getRecord="getAllFoodRecord:" +user.getUserId();
+        webSocketManager.sendMessage(getRecord);
+
 
         // 初始化跳转按钮
         breakfast_button = view.findViewById(R.id.breakfastButton);
@@ -127,5 +176,26 @@ public class DietFragment extends Fragment {
             });
         }
     }
+public boolean istoday(String day) throws ParseException {
+    // 定义日期格式
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    // 解析给定的日期字符串为 Date 对象
+    Date givenDate = sdf.parse(day);
+
+    // 获取今天的日期
+    Date today = new Date();
+
+    // 比较日期（只比较年月日，不考虑时分秒）
+    SimpleDateFormat dayFormat = new SimpleDateFormat("yyyy-MM-dd");
+    String givenDateStr = dayFormat.format(givenDate);
+    String todayStr = dayFormat.format(today);
+
+    if (givenDateStr.equals(todayStr)) {
+       return true;
+    } else {
+       return false;
+    }
+}
 }
 

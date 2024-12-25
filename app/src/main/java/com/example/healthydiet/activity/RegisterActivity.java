@@ -98,7 +98,14 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if (phone.isEmpty() || password.isEmpty() || username.isEmpty() || age <= 0 || height <= 0 || weight <= 0) {
                     Toast.makeText(RegisterActivity.this, "请填写所有字段", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+                else if(password.length()<6){
+                    Toast.makeText(RegisterActivity.this, "密码长度至少为6位", Toast.LENGTH_SHORT).show();
+                }
+                else if(!containsLetterAndDigit(password)){
+                    Toast.makeText(RegisterActivity.this, "密码必须同时包含数字和字母", Toast.LENGTH_SHORT).show();
+                }
+                else {
                     // 创建 User 对象
                     user = new User(username, password, weight, age, height, phone);
                     // 密码加密
@@ -110,6 +117,11 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+    public boolean containsLetterAndDigit(String input) {
+        // 判断字符串是否同时包含字母和数字
+        return input.matches(".*[a-zA-Z].*") && input.matches(".*\\d.*");
+    }
+
     // 使用 SHA-256 对密码进行加密
     private String encryptPassword(String password) {
         try {

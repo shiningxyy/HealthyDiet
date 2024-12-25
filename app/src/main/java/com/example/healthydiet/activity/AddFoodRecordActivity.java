@@ -130,7 +130,7 @@ public class AddFoodRecordActivity extends AppCompatActivity {
                 if (response.optInt("status") == 200) {
                     Log.d("AddFoodRecord", "Add successful");
                     Toast.makeText(AddFoodRecordActivity.this, "Add food record successful", Toast.LENGTH_SHORT).show();
-                    intent.set(new Intent(AddFoodRecordActivity.this, FoodlistActivity.class));
+                    intent.set(new Intent(AddFoodRecordActivity.this, HomeActivity.class));
                     startActivity(intent.get());
 
                     finish();
