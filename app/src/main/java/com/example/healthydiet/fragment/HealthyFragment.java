@@ -34,6 +34,7 @@ import com.example.healthydiet.R;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,12 +133,27 @@ public class HealthyFragment extends Fragment {
 
     private void updateExerciseListView(List<ExerciseRecord> exerciseRecordList) {
         // 使用新的数据更新适配器
+// 获取今天的日期
+        String todayDate = getCurrentDate();
 
-        adapter = new ExerciseHistoryAdapter(getContext(), exerciseRecordList);  // 适配器传递上下文
+        // 筛选出今天的运动记录
+        List<ExerciseRecord> todayRecords = new ArrayList<>();
+        for (ExerciseRecord record : exerciseRecordList) {
+            if (record.getDate().equals(todayDate)) {
+                todayRecords.add(record);
+            }
+        }
+
+        adapter = new ExerciseHistoryAdapter(getContext(), todayRecords);  // 适配器传递上下文
         exerciseListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
     }
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new java.util.Date());
+    }
+
     private void setupExerciseTrendGraph() {
         // 模拟数据
         ArrayList<BarEntry> entries = new ArrayList<>();
