@@ -65,10 +65,7 @@ public class RegisterActivity extends AppCompatActivity {
                     // 注册成功处理
                     runOnUiThread(() -> {
                         Toast.makeText(RegisterActivity.this, "Register successful", Toast.LENGTH_SHORT).show();
-                        // 将 user 对象放入 Intent
                         Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
-                        //intent.putExtra("user", user); // 将 User 对象传递过去
-                        // 使用 UserManager 设置 User 对象
                         UserManager.getInstance().setUser(user);
                         startActivity(intent);
                         finish();

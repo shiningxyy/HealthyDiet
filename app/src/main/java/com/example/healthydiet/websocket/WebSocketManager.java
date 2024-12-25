@@ -104,8 +104,8 @@ public class WebSocketManager {
                 // 处理注册响应的特殊情况
                 if (message.contains("注册成功")) {
                     // 提取status字段
-                    JSONObject partialJson = new JSONObject();
-                    partialJson.put("status", 200);
+                 //   JSONObject partialJson = new JSONObject();
+                 //   partialJson.put("status", 200);
                  //   partialJson.put("message", "注册成功");
                     String type = WebSocketMessageType.REGISTER;
                     WebSocketCallback callback = callbackMap.get(type);
@@ -147,9 +147,9 @@ public class WebSocketManager {
                     }
                     return;
                 }
-                    else{//登录
+                else{//登录
                     String type = WebSocketMessageType.LOGIN;
-                    Log.d("WebSocket", "Determined message type: " + type);
+                  //  Log.d("WebSocket", "Determined message type: " + type);
                     WebSocketCallback callback = callbackMap.get(type);
                     if (callback != null) {
                         Log.d("WebSocket", "Found callback for type: " + type);
