@@ -23,6 +23,9 @@ public class HomeActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        String fragmentKey = getIntent().getStringExtra("fragment_key");
+
+        // 根据标识加载相应的 Fragment
 
         // 获取WebSocketManager实例
         webSocketManager = WebSocketManager.getInstance();
@@ -30,23 +33,6 @@ public class HomeActivity extends AppCompatActivity{
         // 获取底部导航栏
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        // 从 Intent 中获取传递的数据
-        Intent intent = getIntent();
-        int exerciseId = intent.getIntExtra("exerciseId", -1);
-        int caloriesPerHour = intent.getIntExtra("caloriesPerHour", 0);
-        String exerciseName = intent.getStringExtra("name");
-        int duration = intent.getIntExtra("duration", 0);
-        int burnedCalories = intent.getIntExtra("burnedCalories", 0);
-        String date = intent.getStringExtra("date");
-
-        // 创建 Bundle 并传递数据
-        Bundle bundle = new Bundle();
-        bundle.putInt("exerciseId", exerciseId);
-        bundle.putInt("caloriesPerHour", caloriesPerHour);
-        bundle.putString("name", exerciseName);
-        bundle.putInt("duration", duration);
-        bundle.putInt("burnedCalories", burnedCalories);
-        bundle.putString("date", date);
 
         // 默认显示 DietFragment
         if (savedInstanceState == null) {
@@ -55,7 +41,12 @@ public class HomeActivity extends AppCompatActivity{
                     .replace(R.id.fragment_container, currentFragment)
                     .commit();
         }
-
+        if ("HealthyFragment".equals(fragmentKey)) {
+            currentFragment = new HealthyFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, currentFragment)
+                    .commit();
+        }
         // 设置导航栏项选择监听器
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();  // 获取当前点击的菜单项的ID

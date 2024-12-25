@@ -169,13 +169,21 @@ public class WebSocketManager {
                         handler.post(() -> callback.onMessage(message));
                     }
                 }
-                else{
+                else if(message.contains("foodid")){
                     Log.d("WebSocket", "Received array message, treating as food list");
                     WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_LIST);
                     if (callback != null) {
                         handler.post(() -> callback.onMessage(message));
                     }
                 }
+                else if (message.contains("exerciseRecordId")) {
+                    Log.d("WebSocket", "Received array message, treating as exercise record list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_RECORD_GET);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(message));
+                    }
+                }
+
 
             }
             else if (message.startsWith("[") && message.contains("caloriesPerHour")) {
@@ -185,6 +193,7 @@ public class WebSocketManager {
                     handler.post(() -> callback.onMessage(message));
                 }
             }
+
         } catch (Exception e) {
             Log.e("WebSocket", "Error handling message: " + e.getMessage());
             e.printStackTrace();
