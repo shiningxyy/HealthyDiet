@@ -10,7 +10,7 @@ public class UserManager {
     private UserManager() {}
 
     // 获取唯一实例的方法
-    public static UserManager getInstance() {
+    public static synchronized UserManager getInstance() {
         if (instance == null) {
             instance = new UserManager();
         }

@@ -19,7 +19,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-
         app:itemIconTint="@color/black"
         app:itemRippleColor="#8BC34A"
         app:itemTextColor="#050505"

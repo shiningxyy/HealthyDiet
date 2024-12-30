@@ -15,7 +15,7 @@
         android:id="@+id/nav_community"
         android:icon="@drawable/ic_community1"
         android:title="社区"
-        android:visible="false" />
+         />
 
     <item
         android:id="@+id/nav_profile"

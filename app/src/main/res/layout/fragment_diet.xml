@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:background="@drawable/t7">
 
     <!-- 标题栏 -->
@@ -72,7 +71,6 @@
         android:text="查看详情>>"
         android:textAllCaps="false"
         android:textColor="#4CAF50"
-        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/caloriesTextView"

@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.healthydiet.R;
 import com.example.healthydiet.UserManager;
+import com.example.healthydiet.activity.DietAnalysisActivity;
 import com.example.healthydiet.activity.FoodlistActivity;
 import com.example.healthydiet.activity.MainActivity;
 import com.example.healthydiet.activity.RegisterActivity;
@@ -27,10 +28,10 @@ import com.example.healthydiet.websocket.WebSocketMessageType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,8 +44,16 @@ public class DietFragment extends Fragment {
     private Button lunch_button;
     private Button dinner_button;
     private Button view_record;
+    private Button diet_analysis;
     private WebSocketManager webSocketManager;
-    private List<FoodRecord> FoodRecordList;
+    private List<FoodRecord> TodayRecordList;
+    private int total_calories=0;
+    private double total_fat=0;
+    private double total_protein=0;
+    private double total_carbohydrates=0;
+    private double total_sodium=0;
+    private double total_potassium=0;
+    private double total_dietaryFiber=0;
     //private User user;
     public DietFragment() {
         // Required empty public constructor
@@ -67,22 +76,45 @@ public class DietFragment extends Fragment {
             Log.d("FoodRecordList", "Received food record list response: " + message);
             try {
                 JSONArray foodLists = new JSONArray(message);
-                FoodRecordList = new ArrayList<>();
-                int sum_calories=0;
+                TodayRecordList = new ArrayList<>();
+
                 for (int i = 0; i < foodLists.length(); i++) {
                     JSONObject foodJson = foodLists.getJSONObject(i);
-                    String today=foodJson.getString("recordTime");
-                    if(istoday(today)){
+                    String record_time=foodJson.getString("recordTime");
+                    if(istoday(record_time)){
                         int calories= foodJson.getInt("calories");
-                        sum_calories+=calories;
+                        int food_record_id=foodJson.getInt("foodRecordId");
+                        String food_name=foodJson.getString("foodname");
+                        int user_id=foodJson.getInt("userId");
+                        int food_id=foodJson.getInt("foodId");
+                        double food_weight=foodJson.getDouble("foodWeight");
+                        double fat=foodJson.getDouble("fat");
+                        double protein=foodJson.getDouble("protein");
+                        double carbohydrates=foodJson.getDouble("carbohydrates");
+                        double sodium=foodJson.getDouble("sodium");
+                        double potassium=foodJson.getDouble("potassium");
+                        double dietaryFiber=foodJson.getDouble("dietaryFiber");
+                        FoodRecord today_record=new FoodRecord(food_record_id,food_name,record_time,
+                                user_id,food_id, food_weight,calories,fat,protein,carbohydrates,sodium,
+                                potassium,dietaryFiber);
+                        TodayRecordList.add(today_record);
+                        total_calories+=calories;
+                        total_potassium+=potassium;
+                        total_protein+=protein;
+                        total_carbohydrates+=carbohydrates;
+                        total_dietaryFiber+=dietaryFiber;
+                        total_fat+=fat;
+                        total_sodium+=sodium;
+                        System.out.println("fat："+fat);
+                        System.out.println("total_fat："+total_fat);
                     }
                 }
-                System.out.println("列表长度："+foodLists.length());
-                System.out.println("总卡路里："+sum_calories);
+               // System.out.println("列表长度："+foodLists.length());
+               //  System.out.println("总卡路里："+total_calories);
 
                     // 更新进度条
-                    updateProgressBar(sum_calories);
-                    updateCaloriesText(sum_calories);
+                updateProgressBar(total_calories);
+                updateCaloriesText(total_calories);
 
             } catch (Exception e) {
                 Log.e("FoodRecordList", "Error processing food record list: " + e.getMessage());
@@ -117,8 +149,6 @@ public class DietFragment extends Fragment {
         lunch_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
             Intent intent = new Intent(getActivity(), FoodlistActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
-            // 将 user 对象传递给目标 Activity
-        //    intent.putExtra("user", user); // 将 user 对象作为 Extra 传递
             startActivity(intent);
         });
 
@@ -128,8 +158,6 @@ public class DietFragment extends Fragment {
         dinner_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
             Intent intent = new Intent(getActivity(), FoodlistActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
-            // 将 user 对象传递给目标 Activity
-            //intent.putExtra("user", user); // 将 user 对象作为 Extra 传递
             startActivity(intent);
         });
 
@@ -139,6 +167,23 @@ public class DietFragment extends Fragment {
         view_record.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
             Intent intent = new Intent(getActivity(), ViewFoodRecordActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            startActivity(intent);
+        });
+
+        diet_analysis = view.findViewById(R.id.details_button);
+        // 设置按钮点击事件，跳转到另一个 Activity
+        diet_analysis.setOnClickListener(v -> {
+            // 使用 Intent 跳转到新的 Activity
+            Intent intent = new Intent(getActivity(), DietAnalysisActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            // 将 List 传递到目标 Activity
+            intent.putExtra("TodayRecordList", (Serializable) TodayRecordList);  // 传递序列化的 List
+            intent.putExtra("total_calories",total_calories);
+            intent.putExtra("total_fat",total_fat);
+            intent.putExtra("total_sodium",total_sodium);
+            intent.putExtra("total_dietaryFiber",total_dietaryFiber);
+            intent.putExtra("total_carbohydrates",total_carbohydrates);
+            intent.putExtra("total_protein",total_protein);
+            intent.putExtra("total_potassium",total_potassium);
 
             startActivity(intent);
         });

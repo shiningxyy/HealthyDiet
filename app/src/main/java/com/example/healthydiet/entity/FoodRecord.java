@@ -1,6 +1,8 @@
 package com.example.healthydiet.entity;
 
-public class FoodRecord {
+import java.io.Serializable;
+
+public class FoodRecord  implements Serializable {
     private int foodRecordId;
     private String recordTime;        // 记录时间（例如：2024-12-24T12:34:56）
     private int userId;            // 用户ID
