@@ -2,8 +2,13 @@ package com.example.healthydiet.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -13,9 +18,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.healthydiet.R;
+import com.example.healthydiet.UserManager;
+import com.example.healthydiet.entity.FoodItem;
 import com.example.healthydiet.entity.FoodRecord;
+import com.example.healthydiet.entity.User;
+import com.example.healthydiet.websocket.WebSocketManager;
+import com.example.healthydiet.websocket.WebSocketMessageType;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class DietAnalysisActivity extends AppCompatActivity {
     private List<FoodRecord> TodayRecordList;
@@ -29,6 +45,13 @@ public class DietAnalysisActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView caloriesTextView;  // 用来显示摄入千卡数
     private TableLayout tableLayout;
+
+    private TableLayout tableLayoutfood;
+
+    private Button recipeRecommendationButton;
+
+    private WebSocketManager webSocketManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +104,56 @@ public class DietAnalysisActivity extends AppCompatActivity {
         addTableRow("膳食纤维",total_dietaryFiber+"克");
         addTableRow("钠",total_sodium+"毫克");
         addTableRow("钾",total_potassium+"毫克");
+
+        User user = UserManager.getInstance().getUser();
+        tableLayoutfood = findViewById(R.id.table_layout_food);  // 获取 TableLayout
+
+        double[] userProfile = {2000-total_calories, 2000*0.45f/4.0-total_carbohydrates, 25.0-total_dietaryFiber, 4700.0-total_potassium,1500.0-total_sodium, 2000*0.2f/9.0-total_fat, user.getWeight()*0.8-total_protein};
+
+
+        webSocketManager = WebSocketManager.getInstance();
+        webSocketManager.logConnectionStatus();  // 记录连接状态
+        // 注册食物列表回调
+        webSocketManager.registerCallback(WebSocketMessageType.FOOD_LIST, message -> {
+            Log.d("FoodList", "Received food list response: " + message);
+            try {
+                JSONArray foodItems = new JSONArray(message);
+                List<FoodItem> foodItemList = new ArrayList<>();
+
+                for (int i = 0; i < foodItems.length(); i++) {
+                    JSONObject foodJson = foodItems.getJSONObject(i);
+                    FoodItem foodItem = new FoodItem(
+                            foodJson.getString("name"),
+                            foodJson.getString("type"),
+                            foodJson.getInt("calories"),
+                            foodJson.getDouble("carbohydrates"),
+                            foodJson.getDouble("dietaryFiber"),
+                            foodJson.getDouble("potassium"),
+                            foodJson.getDouble("sodium"),
+                            foodJson.getDouble("fat"),
+                            foodJson.getDouble("protein")
+                    );
+                    int id = foodJson.getInt("foodid");
+                    foodItem.setFoodid(id);
+                    foodItemList.add(foodItem);
+                }
+                List<FoodItem> recommendedFoods = recommendTopNFoods(foodItemList, userProfile, 3);
+
+                displayRecommendedFoods(recommendedFoods);
+            } catch (Exception e) {
+                Log.e("FoodList", "Error processing food list: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+
+        // 确保WebSocket已连接后再发送请求
+        if (!webSocketManager.isConnected()) {
+            Log.d("FoodList", "WebSocket not connected, attempting to reconnect...");
+            webSocketManager.reconnect();
+        }
+        webSocketManager.sendMessage("getAllFood");
+
+
     }
     private void addTableRow(String item, String calories) {
         // 创建新的 TableRow
@@ -104,4 +177,102 @@ public class DietAnalysisActivity extends AppCompatActivity {
         // 将新创建的 TableRow 添加到 TableLayout 中
         tableLayout.addView(tableRow);
     }
+    private void displayRecommendedFoods(List<FoodItem> recommendedFoods) {
+        // 清空之前的推荐数据（如果有的话）
+        tableLayoutfood.removeAllViews();
+
+        for (FoodItem food : recommendedFoods) {
+            // 创建一个新的 TableRow 来显示每个食物的详细信息
+            TableRow tableRow = new TableRow(this);
+
+            // 创建一个 LinearLayout 来垂直排列图片和文本
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setOrientation(LinearLayout.VERTICAL);  // 设置方向为垂直排列
+            linearLayout.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
+            linearLayout.setGravity(Gravity.CENTER_HORIZONTAL); // 使整个LinearLayout在水平方向上居中
+
+            // 创建 ImageView 显示食物图片
+            ImageView imageView = new ImageView(this);
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(160, 160));  // 设置图片的大小
+            imageView.setImageResource(R.drawable.avater);  // 使用食物的图片资源ID（假设 FoodItem 有此字段）
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);  // 设置图片裁剪类型，确保图片填充完整
+
+            // 将 ImageView 添加到 LinearLayout 中
+            linearLayout.addView(imageView);
+
+            // 创建 TextView 显示食物名称
+            TextView nameTextView = new TextView(this);
+            nameTextView.setText(food.getName());
+            nameTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            nameTextView.setTextSize(16);
+            nameTextView.setPadding(16, 0, 16, 0);
+
+            // 将 TextView 添加到 LinearLayout 中
+            linearLayout.addView(nameTextView);
+
+            // 创建 TextView 显示食物的热量
+            TextView caloriesTextView = new TextView(this);
+            caloriesTextView.setText(food.getCalories() + " kcal/100g");
+            caloriesTextView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            caloriesTextView.setTextSize(16);
+            caloriesTextView.setPadding(16, 0, 16, 0);
+
+            // 将热量 TextView 添加到 LinearLayout 中
+            linearLayout.addView(caloriesTextView);
+
+            // 将 LinearLayout 添加到 TableRow 中
+            tableRow.addView(linearLayout);
+
+            // 将 TableRow 添加到 TableLayout 中
+            tableLayoutfood.addView(tableRow);
+        }
+    }
+
+
+
+    private double calculateSimilarity(double[] userPreferences, FoodItem food) {
+        double dotProduct = 0;
+        double userMagnitude = 0;
+        double foodMagnitude = 0;
+        double[] foodAttributes = {food.getCalories(), food.getCarbohydrates(), food.getDietaryFiber(), food.getPotassium(),food.getSodium(), food.getFat(), food.getProtein()};
+
+        for (int i = 0; i < userPreferences.length; i++) {
+            dotProduct += userPreferences[i] * foodAttributes[i];
+            userMagnitude += Math.pow(userPreferences[i], 2);
+            foodMagnitude += Math.pow(foodAttributes[i], 2);
+        }
+
+        return dotProduct / (Math.sqrt(userMagnitude) * Math.sqrt(foodMagnitude));
+    }
+    public List<FoodItem> recommendTopNFoods(List<FoodItem> foods, double[] userPreferences, int N) {
+        // 创建一个优先队列，按相似度降序排列
+        PriorityQueue<FoodItem> queue = new PriorityQueue<>(new Comparator<FoodItem>() {
+            @Override
+            public int compare(FoodItem f1, FoodItem f2) {
+                // 计算食物与用户偏好之间的相似度
+                double similarity1 = calculateSimilarity(userPreferences, f1);
+                double similarity2 = calculateSimilarity(userPreferences, f2);
+
+                // 按相似度降序排列
+                return Double.compare(similarity2, similarity1);
+            }
+        });
+
+        // 将所有食物添加到优先队列中
+        for (FoodItem food : foods) {
+            queue.add(food);
+        }
+
+        // 取出前N个食物
+        List<FoodItem> recommendedFoods = new ArrayList<>();
+        for (int i = 0; i < N && !queue.isEmpty(); i++) {
+            recommendedFoods.add(queue.poll());
+        }
+
+        return recommendedFoods;
+    }
+
 }

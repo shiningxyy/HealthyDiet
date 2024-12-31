@@ -37,6 +37,13 @@ public class FoodRecord  implements Serializable {
         this.dietaryFiber = dietaryFiber;
         this.foodName=foodName;
     }
+    public int getFoodRecordId() {
+        return foodRecordId;
+    }
+
+    public void setFoodRecordId(String foodName) {
+        this.foodRecordId = foodRecordId;
+    }
 
     public String getFoodName() {
         return foodName;

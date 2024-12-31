@@ -92,5 +92,11 @@
             android:text="Potassium"
             android:textSize="14sp" />
 
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/holo_red_dark"
+            android:text="删除" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

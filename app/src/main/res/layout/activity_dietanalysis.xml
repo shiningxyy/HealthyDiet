@@ -78,5 +78,14 @@
 
 
     </TableLayout>
-
+    <TableLayout
+        android:id="@+id/table_layout_food"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
+        android:padding="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/table_layout">
+    </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

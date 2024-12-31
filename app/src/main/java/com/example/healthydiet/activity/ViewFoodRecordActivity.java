@@ -1,5 +1,6 @@
 package com.example.healthydiet.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -45,10 +46,11 @@ public class ViewFoodRecordActivity extends AppCompatActivity {
 
         // 返回按钮的点击监听器
         toolbar.setNavigationOnClickListener(v -> {
-            // 处理返回操作
-            onBackPressed();  // 执行返回操作
-        });
+            Intent intent = new Intent(ViewFoodRecordActivity.this, HomeActivity.class);
+            intent.putExtra("fragment_key", "DietFragment");
 
+            startActivity(intent);
+        });
         recyclerView = findViewById(R.id.food_record_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this)); // 使用垂直线性布局
 

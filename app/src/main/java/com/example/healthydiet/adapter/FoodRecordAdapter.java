@@ -4,6 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -42,7 +43,7 @@ public class FoodRecordAdapter extends RecyclerView.Adapter<FoodRecordAdapter.Fo
     public void onBindViewHolder(@NonNull FoodRecordViewHolder holder, int position) {
         // 获取当前食物记录对象
         FoodRecord foodRecord = foodRecordList.get(position);
-
+        webSocketManager = WebSocketManager.getInstance();
 
         // 在卡片视图中设置数据
         holder.recordTimeTextView.setText(foodRecord.getRecordTime());
@@ -55,8 +56,30 @@ public class FoodRecordAdapter extends RecyclerView.Adapter<FoodRecordAdapter.Fo
         holder.sodiumTextView.setText("钠：" + foodRecord.getSodium() + " 毫克");
         holder.potassiumTextView.setText("钾：" + foodRecord.getPotassium() + " 毫克");
         holder.dietaryFiberTextView.setText("膳食纤维：" + foodRecord.getDietaryFiber() + " 克");
+        holder.deleteButton.setOnClickListener(v -> {
+            // 删除当前记录
+            removeItem(position);
+        });
     }
+    private void removeItem(int position) {
+        // 从数据列表中移除该项
+        FoodRecord foodRecord = foodRecordList.get(position);
 
+        foodRecordList.remove(position);
+        // 通知适配器数据已更改
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, foodRecordList.size());
+
+        String deleteMessage = "deleteFoodRecord:" + foodRecord.getFoodRecordId(); // 根据实际需求构建消息
+
+        // 使用 WebSocketManager 发送删除请求
+        if (webSocketManager.isConnected()) {
+            webSocketManager.sendMessage(deleteMessage);
+            Log.d("FoodRecordAdapter", "Sent delete request to server: " + deleteMessage);
+        } else {
+            Log.e("FoodRecordAdapter", "WebSocket is not connected.");
+        }
+    }
     @Override
     public int getItemCount() {
         return foodRecordList.size();
@@ -75,6 +98,7 @@ public class FoodRecordAdapter extends RecyclerView.Adapter<FoodRecordAdapter.Fo
         TextView sodiumTextView;
         TextView potassiumTextView;
         TextView dietaryFiberTextView;
+        Button deleteButton; // 新增删除按钮的引用
 
         public FoodRecordViewHolder(View itemView) {
             super(itemView);
@@ -88,6 +112,8 @@ public class FoodRecordAdapter extends RecyclerView.Adapter<FoodRecordAdapter.Fo
             sodiumTextView = itemView.findViewById(R.id.sodiumTextView);
             potassiumTextView = itemView.findViewById(R.id.potassiumTextView);
             dietaryFiberTextView = itemView.findViewById(R.id.dietaryFiberTextView);
+            deleteButton = itemView.findViewById(R.id.deleteButton); // 绑定删除按钮
+
         }
     }
 }
