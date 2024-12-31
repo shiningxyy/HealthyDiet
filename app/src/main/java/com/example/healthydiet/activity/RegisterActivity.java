@@ -56,8 +56,8 @@ public class RegisterActivity extends AppCompatActivity {
                     String userinfo = response.getString("user");
                     JSONObject user_response=new JSONObject(userinfo);
                     // 提取 userId 字段
-                    int userId = user_response.getInt("userId");
-                    int isblocked=user_response.getInt("isblocked");
+                    int userId = user_response.getInt("id");
+                    int isblocked=user_response.getInt("isBlocked");
                     String profilePicture=user_response.getString("profilePicture");
                     user.setProfilePicture(profilePicture);
                     user.setUserId(userId);
