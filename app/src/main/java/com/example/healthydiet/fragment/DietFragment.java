@@ -54,6 +54,7 @@ public class DietFragment extends Fragment {
     private double total_sodium=0;
     private double total_potassium=0;
     private double total_dietaryFiber=0;
+    private  double generation;
     //private User user;
     public DietFragment() {
         // Required empty public constructor
@@ -109,11 +110,21 @@ public class DietFragment extends Fragment {
                         System.out.println("total_fat："+total_fat);
                     }
                 }
-               // System.out.println("列表长度："+foodLists.length());
-               //  System.out.println("总卡路里："+total_calories);
 
-                    // 更新进度条
-                updateProgressBar(total_calories);
+                User user = UserManager.getInstance().getUser();
+                int gender= user.getGender();
+                int weight= user.getWeight();
+                double activity_factor= user.getActivity_factor();
+
+                if(gender==0){
+                    generation=(48.5*weight+2954.7)/4.184;
+                    generation*=activity_factor;
+                }
+                else{
+                    generation=(41.9*weight+2869.1)/4.184;
+                    generation*=activity_factor;
+                }
+                updateProgressBar(total_calories, (int) generation);
                 updateCaloriesText(total_calories);
 
             } catch (Exception e) {
@@ -184,7 +195,7 @@ public class DietFragment extends Fragment {
             intent.putExtra("total_carbohydrates",total_carbohydrates);
             intent.putExtra("total_protein",total_protein);
             intent.putExtra("total_potassium",total_potassium);
-
+            intent.putExtra("generation",generation);
             startActivity(intent);
         });
 
@@ -192,7 +203,7 @@ public class DietFragment extends Fragment {
     }
 
     // 更新环形进度条
-    private void updateProgressBar(int x) {
+    private void updateProgressBar(int x,int max) {
         // 计算进度百分比
         int progress = x; // 转换为百分比进度
         System.out.println("计算进度");
@@ -204,6 +215,7 @@ public class DietFragment extends Fragment {
                     System.out.println("进度：");
                     System.out.println(progress);
                     circularProgressBar.setProgress(progress);  // 设置进度
+                    circularProgressBar.setMax(max);
                 }
             });
         }

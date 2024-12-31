@@ -87,51 +87,61 @@
         android:id="@+id/gender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="64dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="72dp"
         android:text="性别"
         android:textColor="#AEB3B6"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:typeface="normal"
-        app:layout_constraintBottom_toTopOf="@id/input_gender"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/input_activity_factor"
+        app:layout_constraintEnd_toStartOf="@id/activity"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_height"
-        app:layout_constraintVertical_bias="0.673" />
+        app:layout_constraintTop_toBottomOf="@id/input_height" />
 
     <Spinner
         android:id="@+id/input_gender"
         android:layout_width="120dp"
         android:layout_height="40dp"
         android:entries="@array/gender_options"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintEnd_toStartOf="@id/input_activity_factor"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gender" />
 
+    <TextView
+        android:id="@+id/activity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="24dp"
+        android:text="运动频率"
+        android:textColor="#AEB3B6"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/gender"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/input_weight" />
 
-
-
-    <com.google.android.material.textfield.TextInputEditText
+    <Spinner
         android:id="@+id/input_activity_factor"
         android:layout_width="120dp"
-        android:layout_height="80dp"
-        android:hint="活动因子"
-        android:inputType="number"
+        android:layout_height="40dp"
+        android:entries="@array/activity_factor_options"
+        app:layout_constraintTop_toBottomOf="@id/activity"
         app:layout_constraintStart_toEndOf="@id/input_gender"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/input_weight"
-        android:layout_marginTop="20dp"
         app:layout_constraintHorizontal_bias="0.5" />
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/register_button"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-
+        android:layout_marginTop="32dp"
         android:text="注册"
         android:typeface="normal"
         app:layout_constraintEnd_toEndOf="parent"

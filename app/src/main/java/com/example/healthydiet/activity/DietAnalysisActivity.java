@@ -42,8 +42,10 @@ public class DietAnalysisActivity extends AppCompatActivity {
     private double total_sodium=0;
     private double total_potassium=0;
     private double total_dietaryFiber=0;
+    private double generation;
     private ProgressBar progressBar;
     private TextView caloriesTextView;  // 用来显示摄入千卡数
+    private TextView hintTextView;
     private TableLayout tableLayout;
 
     private TableLayout tableLayoutfood;
@@ -83,18 +85,22 @@ public class DietAnalysisActivity extends AppCompatActivity {
         total_sodium=getIntent().getDoubleExtra("total_sodium", 0);
         total_potassium=getIntent().getDoubleExtra("total_potassium", 0);
         total_dietaryFiber=getIntent().getDoubleExtra("total_dietaryFiber", 0);
-        System.out.println(total_fat);
+        generation=getIntent().getDoubleExtra("generation", 0);
+
 
         // 初始化进度条
         progressBar = findViewById(R.id.progress_bar);
-
         // 设置进度条的最大值和当前进度
-        progressBar.setMax(2000);  // 设置最大进度为 2000
+        progressBar.setMax((int)generation);  // 设置最大进度为 2000
         progressBar.setProgress(total_calories);  // 将 total_calories 作为当前进度
 
         caloriesTextView = findViewById(R.id.TextView2);
         String caloriesText = "今日已摄入 " + total_calories + " 千卡";
         caloriesTextView.setText(caloriesText);
+
+        hintTextView = findViewById(R.id.TextView1);
+        String hintText = "根据毛德倩公式，每日应摄入热量 " + (int)generation + " 千卡";
+        hintTextView.setText(hintText);
 
         tableLayout = findViewById(R.id.table_layout);  // 获取 TableLayout
         addTableRow("项目","摄入量");
@@ -109,7 +115,6 @@ public class DietAnalysisActivity extends AppCompatActivity {
         tableLayoutfood = findViewById(R.id.table_layout_food);  // 获取 TableLayout
 
         double[] userProfile = {2000-total_calories, 2000*0.45f/4.0-total_carbohydrates, 25.0-total_dietaryFiber, 4700.0-total_potassium,1500.0-total_sodium, 2000*0.2f/9.0-total_fat, user.getWeight()*0.8-total_protein};
-
 
         webSocketManager = WebSocketManager.getInstance();
         webSocketManager.logConnectionStatus();  // 记录连接状态
@@ -137,7 +142,7 @@ public class DietAnalysisActivity extends AppCompatActivity {
                     foodItem.setFoodid(id);
                     foodItemList.add(foodItem);
                 }
-                List<FoodItem> recommendedFoods = recommendTopNFoods(foodItemList, userProfile, 3);
+                List<FoodItem> recommendedFoods = recommendTopNFoods(foodItemList, userProfile, 6);
 
                 displayRecommendedFoods(recommendedFoods);
             } catch (Exception e) {
@@ -181,35 +186,33 @@ public class DietAnalysisActivity extends AppCompatActivity {
         // 清空之前的推荐数据（如果有的话）
         tableLayoutfood.removeAllViews();
 
-        for (FoodItem food : recommendedFoods) {
-            // 创建一个新的 TableRow 来显示每个食物的详细信息
-            TableRow tableRow = new TableRow(this);
+        // 每行最多放两个食物
+        int columnCount = 2;
+        TableRow tableRow = null;
+
+        for (int i = 0; i < recommendedFoods.size(); i++) {
+            // 如果 tableRow 为空或者已经添加了两个元素，创建一个新的 TableRow
+            if (i % columnCount == 0) {
+                tableRow = new TableRow(this);
+            }
+
+            // 获取当前食物
+            FoodItem food = recommendedFoods.get(i);
 
             // 创建一个 LinearLayout 来垂直排列图片和文本
             LinearLayout linearLayout = new LinearLayout(this);
             linearLayout.setOrientation(LinearLayout.VERTICAL);  // 设置方向为垂直排列
             linearLayout.setLayoutParams(new TableRow.LayoutParams(
                     TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT));
-            linearLayout.setGravity(Gravity.CENTER_HORIZONTAL); // 使整个LinearLayout在水平方向上居中
-
-            // 创建 ImageView 显示食物图片
-            ImageView imageView = new ImageView(this);
-            imageView.setLayoutParams(new LinearLayout.LayoutParams(160, 160));  // 设置图片的大小
-            imageView.setImageResource(R.drawable.avater);  // 使用食物的图片资源ID（假设 FoodItem 有此字段）
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);  // 设置图片裁剪类型，确保图片填充完整
-
-            // 将 ImageView 添加到 LinearLayout 中
-            linearLayout.addView(imageView);
+            linearLayout.setGravity(Gravity.CENTER_HORIZONTAL); // 使整个 LinearLayout 在水平方向上居中
 
             // 创建 TextView 显示食物名称
             TextView nameTextView = new TextView(this);
             nameTextView.setText(food.getName());
             nameTextView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            nameTextView.setTextSize(16);
+            nameTextView.setTextSize(18);
             nameTextView.setPadding(16, 0, 16, 0);
-
-            // 将 TextView 添加到 LinearLayout 中
             linearLayout.addView(nameTextView);
 
             // 创建 TextView 显示食物的热量
@@ -217,19 +220,20 @@ public class DietAnalysisActivity extends AppCompatActivity {
             caloriesTextView.setText(food.getCalories() + " kcal/100g");
             caloriesTextView.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            caloriesTextView.setTextSize(16);
+            caloriesTextView.setTextSize(18);
             caloriesTextView.setPadding(16, 0, 16, 0);
-
-            // 将热量 TextView 添加到 LinearLayout 中
             linearLayout.addView(caloriesTextView);
 
             // 将 LinearLayout 添加到 TableRow 中
             tableRow.addView(linearLayout);
 
-            // 将 TableRow 添加到 TableLayout 中
-            tableLayoutfood.addView(tableRow);
+            // 如果当前行已满（即有两个元素），将 TableRow 添加到 TableLayout 中
+            if ((i + 1) % columnCount == 0 || i == recommendedFoods.size() - 1) {
+                tableLayoutfood.addView(tableRow);
+            }
         }
     }
+
 
 
 

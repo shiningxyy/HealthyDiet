@@ -77,14 +77,16 @@ public class MainActivity extends AppCompatActivity {
                     int weight=response.getInt("weight");
                     int age=response.getInt("age");
                     int height=response.getInt("height");
-                    user = new User(name, password, weight, age, height, phone);
+                    int gender=response.getInt("gender");
+                    double activity_factor=response.getDouble("activityFactor");
+                    user = new User(name, password, weight, age, height, phone,gender,activity_factor);
                     user.setProfilePicture(profilePicture);
                     user.setUserId(userId);
                     user.setIsblocked(isblocked);
-                    user.setAge(age);
-                    user.setName(name);
-                    user.setWeight(weight);
-                    user.setHeight(height);
+                   // user.setAge(age);
+                  //  user.setName(name);
+                  //  user.setWeight(weight);
+                  //  user.setHeight(height);
                     user.setPassword(password);
                     user.setPhone(phone);
                     // 将 user 对象放入 Intent

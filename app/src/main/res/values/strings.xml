@@ -4,5 +4,11 @@
         <item>男</item>
         <item>女</item>
     </string-array>
-
+    <string-array name="activity_factor_options">
+        <item>久坐不动</item>
+        <item>轻度运动</item>
+        <item>中度运动</item>
+        <item>剧烈运动</item>
+        <item>超级剧烈运动</item>
+    </string-array>
 </resources>

@@ -71,21 +71,36 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
         android:padding="16dp"
-
+        app:layout_constraintBottom_toTopOf="@+id/TextView3"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/progress_bar">
+        app:layout_constraintTop_toBottomOf="@id/progress_bar"></TableLayout>
 
+    <TextView
+        android:id="@+id/TextView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:fontFamily="cursive"
+        android:text="系统根据你的个人状况为你推荐如下食物："
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#F44336"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/table_layout_food"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/table_layout" />
 
-    </TableLayout>
     <TableLayout
         android:id="@+id/table_layout_food"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:padding="16dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/table_layout">
-    </TableLayout>
+        app:layout_constraintTop_toBottomOf="@id/TextView3"></TableLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

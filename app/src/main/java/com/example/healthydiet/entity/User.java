@@ -12,15 +12,18 @@ public class User {
     private int userId;
     private String profilePicture;
     private int isblocked;
+    private int gender;
+    private double activity_factor;
     // 构造函数、getter 和 setter
-    public User(String name,String password,int weight,  int age, int height,String phone) {
+    public User(String name,String password,int weight, int age, int height,String phone,int gender,double activity_factor) {
         this.phone = phone;
         this.password = password;
         this.name = name;
         this.age = age;
         this.height = height;
         this.weight = weight;
-
+        this.gender=gender;
+        this.activity_factor=activity_factor;
     }
 
     // Getter 和 Setter 方法
@@ -94,5 +97,21 @@ public class User {
 
     public void setIsblocked(int isblocked) {
         this.isblocked = isblocked;
+    }
+
+    public double getActivity_factor() {
+        return activity_factor;
+    }
+
+    public void setActivity_factor(double activity_factor) {
+        this.activity_factor = activity_factor;
+    }
+
+    public int getGender() {
+        return gender;
+    }
+
+    public void setGender(int gender) {
+        this.gender = gender;
     }
 }
