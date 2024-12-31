@@ -5,9 +5,11 @@ public class ExerciseRecord {
     private String date;
     private String duration;
     private int burnedCaloris;
+    private int exerciseRecordId;
 
     // 完整构造函数
-    public ExerciseRecord(String exerciseName, String date, String duration, int burnedCaloris) {
+    public ExerciseRecord(int exerciseRecordId,String exerciseName, String date, String duration, int burnedCaloris) {
+        this.exerciseRecordId=exerciseRecordId;
         this.exerciseName = exerciseName;
         this.date = date;
         this.duration = duration;
@@ -15,6 +17,13 @@ public class ExerciseRecord {
     }
 
     // Getter 和 Setter 方法
+    public int getexerciseRecordId() {
+        return exerciseRecordId;
+    }
+
+    public void setexerciseRecordId(int exerciseRecordId) {
+        this.exerciseRecordId = exerciseRecordId;
+    }
     public String getexerciseName() {
         return exerciseName;
     }

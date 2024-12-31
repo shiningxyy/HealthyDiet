@@ -84,6 +84,7 @@ public class AllExerciseRecordActivity extends AppCompatActivity{
                 for (int i = 0; i < exerciseRecords.length(); i++) {
                     JSONObject exerciseJson = exerciseRecords.getJSONObject(i);
                     ExerciseRecord exerciseRecord = new ExerciseRecord(
+                            exerciseJson.getInt("exerciseRecordId"),
                             exerciseJson.getString("exerciseName"),
                             exerciseJson.getString("date"),
                             exerciseJson.getString("duration"),

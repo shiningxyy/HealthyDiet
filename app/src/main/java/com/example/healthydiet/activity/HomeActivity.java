@@ -49,6 +49,14 @@ public class HomeActivity extends AppCompatActivity{
             bottomNavigationView.setSelectedItemId(R.id.nav_healthy);
 
         }
+        else if ("DietFragment".equals(fragmentKey)) {
+            currentFragment = new DietFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, currentFragment)
+                    .commit();
+            bottomNavigationView.setSelectedItemId(R.id.nav_diet);
+
+        }
         // 设置导航栏项选择监听器
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();  // 获取当前点击的菜单项的ID

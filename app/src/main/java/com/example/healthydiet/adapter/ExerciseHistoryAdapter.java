@@ -6,10 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.healthydiet.entity.ExerciseRecord;
 import com.example.healthydiet.R;
+import com.example.healthydiet.websocket.WebSocketManager;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ public class ExerciseHistoryAdapter extends BaseAdapter {
 
     private Context context;
     private List<ExerciseRecord> exerciseRecords;
-
+    Button deleteButton;
     public ExerciseHistoryAdapter(Context context, List<ExerciseRecord> exerciseRecords) {
         this.context = context;
         this.exerciseRecords = exerciseRecords;
@@ -51,6 +53,8 @@ public class ExerciseHistoryAdapter extends BaseAdapter {
             holder.exerciseDurationTextView = convertView.findViewById(R.id.exerciseDurationTextView);
             holder.exerciseCaloriesTextView = convertView.findViewById(R.id.exerciseCaloriesTextView); // 新增
             holder.exerciseDateTextView = convertView.findViewById(R.id.exerciseDateTextView); // 新增
+            deleteButton = convertView.findViewById(R.id.delete_button);  // 假设你有一个删除按钮
+
             convertView.setTag(holder);  // 保存 ViewHolder 到 convertView 中
         } else {
             holder = (ViewHolder) convertView.getTag();  // 从 convertView 中获取 ViewHolder
@@ -59,7 +63,14 @@ public class ExerciseHistoryAdapter extends BaseAdapter {
         // 获取当前的 ExerciseRecord
         ExerciseRecord exerciseRecord = exerciseRecords.get(position);
         Log.d("ExerciseList", "message "+exerciseRecord.getexerciseName());
+        deleteButton.setOnClickListener(v -> {
+            // 删除本地记录
+            exerciseRecords.remove(position);
+            notifyDataSetChanged();  // 刷新 ListView
 
+            // 发送 WebSocket 消息给服务器，告知删除了该记录
+            deleteExerciseRecord(exerciseRecord);
+        });
         String duration=(exerciseRecord.getDuration());
 
         String[] timeParts = duration.split(":"); // 分割字符串为 [小时, 分钟, 秒]
@@ -78,7 +89,15 @@ public class ExerciseHistoryAdapter extends BaseAdapter {
 
         return convertView;  // 返回当前项的视图
     }
-
+    private void deleteExerciseRecord(ExerciseRecord record) {
+        // 将删除记录的消息发送给服务器
+        WebSocketManager webSocketManager = WebSocketManager.getInstance();
+        String deleteMessage = "deleteExerciseRecord:" + record.getexerciseRecordId();  // 假设每个记录有一个唯一的 ID
+        if (!webSocketManager.isConnected()) {
+            webSocketManager.reconnect();
+        }
+        webSocketManager.sendMessage(deleteMessage);
+    }
     // 内部 ViewHolder 类，提高性能
     static class ViewHolder {
         TextView exerciseNameTextView;
