@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
                 if (response.optString("phone").equals(phone)) {
                     Log.d("MainActivity", "Login successful");
                     // 提取 userId 字段
-                    int userId = response.getInt("userId");
-                    int isblocked=response.getInt("isblocked");
+                    int userId = response.getInt("id");
+                    int isblocked=response.getInt("isBlocked");
                     String profilePicture=response.getString("profilePicture");
                     String name=response.getString("name");
                     int weight=response.getInt("weight");

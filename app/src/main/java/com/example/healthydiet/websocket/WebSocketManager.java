@@ -99,14 +99,13 @@ public class WebSocketManager {
     private void handleMessage(String message) {
         Log.d("WebSocket", "Received message: " + message);
         try {
-            // 首先尝试解析为JSONObject
-            if (message.startsWith("{")) {
-                // 处理注册响应的特殊情况
-                if (message.contains("注册成功")) {
-                    // 提取status字段
-                 //   JSONObject partialJson = new JSONObject();
-                 //   partialJson.put("status", 200);
-                 //   partialJson.put("message", "注册成功");
+
+            JSONObject get=new JSONObject(message);
+            int code=get.getInt("code");
+            WebSocketCode wscode= WebSocketCode.class.getEnumConstants()[code];
+            switch (wscode) {
+                case REGISTER_SUCCESS:
+                case REGISTER_FAIL: {
                     String type = WebSocketMessageType.REGISTER;
                     WebSocketCallback callback = callbackMap.get(type);
                     if (callback != null) {
@@ -115,8 +114,32 @@ public class WebSocketManager {
                     }
                     return;
                 }
-                else if (message.contains("食物记录添加成功")) {
+                case LOGIN_SUCCESS:
+                 {
+                     String msg=get.getString("data");
+                    String type = WebSocketMessageType.LOGIN;
+                    //  Log.d("WebSocket", "Determined message type: " + type);
+                    WebSocketCallback callback = callbackMap.get(type);
+                    if (callback != null) {
+                        Log.d("WebSocket", "Found callback for type: " + type);
+                        handler.post(() -> callback.onMessage(msg));
+                    } else {
+                        Log.d("WebSocket", "No callback found for type: " + type);
+                    }
+                    return;
+                }
 
+                case FOOD_LIST_SUCCESS: {
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as food list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_LIST);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
+                case FOOD_RECORD_ADD_SUCCESS:
+                case FOOD_RECORD_ADD_FAIL: {
                     String type = WebSocketMessageType.FOOD_RECORD_ADD;
                     WebSocketCallback callback = callbackMap.get(type);
                     if (callback != null) {
@@ -126,8 +149,16 @@ public class WebSocketManager {
                     }
                     return;
                 }
-                else if(message.contains("foodid")&&message.contains("name")){
-
+                case FOOD_RECORD_GET_SUCCESS: {
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as food record list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_RECORD_GET);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
+                case FOOD_ITEM_GET_SUCCESS: {
                     String type = WebSocketMessageType.FOOD_ITEM_GET;
                     WebSocketCallback callback = callbackMap.get(type);
                     if (callback != null) {
@@ -137,7 +168,27 @@ public class WebSocketManager {
                     }
                     return;
                 }
-                else if(message.contains("用户信息更新成功")){
+                case EXERCISE_RECORD_GET_SUCCESS: {
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as exercise record list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_RECORD_GET);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
+                case EXERCISE_LIST_SUCCESS: {
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as exercise list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_LIST);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
+
+                case UPDATE_USER_SUCCESS:
+                case UPDATE_USER_FAIL: {
                     String type = WebSocketMessageType.UPDATE_USER;
                     WebSocketCallback callback = callbackMap.get(type);
                     if (callback != null) {
@@ -147,52 +198,107 @@ public class WebSocketManager {
                     }
                     return;
                 }
-                else{//登录
-                    String type = WebSocketMessageType.LOGIN;
-                  //  Log.d("WebSocket", "Determined message type: " + type);
-                    WebSocketCallback callback = callbackMap.get(type);
-                    if (callback != null) {
-                        Log.d("WebSocket", "Found callback for type: " + type);
-                        handler.post(() -> callback.onMessage(message));
-                    } else {
-                        Log.d("WebSocket", "No callback found for type: " + type);
-                    }
-                }
+                    default:
+                        break;
 
-            } 
-            // 如果是数组格式
-            else if (message.startsWith("[")&& !message.contains("caloriesPerHour")) {
-                if(message.contains("foodRecordId")){
-                    Log.d("WebSocket", "Received array message, treating as food record list");
-                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_RECORD_GET);
-                    if (callback != null) {
-                        handler.post(() -> callback.onMessage(message));
-                    }
-                }
-                else if(message.contains("foodid")){
-                    Log.d("WebSocket", "Received array message, treating as food list");
-                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_LIST);
-                    if (callback != null) {
-                        handler.post(() -> callback.onMessage(message));
-                    }
-                }
-                else if (message.contains("exerciseRecordId")) {
-                    Log.d("WebSocket", "Received array message, treating as exercise record list");
-                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_RECORD_GET);
-                    if (callback != null) {
-                        handler.post(() -> callback.onMessage(message));
-                    }
-                }
+
 
 
             }
-            else if (message.startsWith("[") && message.contains("caloriesPerHour")) {
-                Log.d("WebSocket", "Received array message, treating as exercise list");
-                WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_LIST);
-                if (callback != null) {
-                    handler.post(() -> callback.onMessage(message));
-                }
-            }
+//            // 首先尝试解析为JSONObject
+//            if (message.startsWith("{")) {
+//                // 处理注册响应的特殊情况
+//                if (message.contains("注册成功")) {
+//                    // 提取status字段
+//                 //   JSONObject partialJson = new JSONObject();
+//                 //   partialJson.put("status", 200);
+//                 //   partialJson.put("message", "注册成功");
+//                    String type = WebSocketMessageType.REGISTER;
+//                    WebSocketCallback callback = callbackMap.get(type);
+//                    if (callback != null) {
+//                        Log.d("WebSocket", "Found callback for register response");
+//                        handler.post(() -> callback.onMessage(message));
+//                    }
+//                    return;
+//                }
+//                else if (message.contains("食物记录添加成功")) {
+//
+//                    String type = WebSocketMessageType.FOOD_RECORD_ADD;
+//                    WebSocketCallback callback = callbackMap.get(type);
+//                    if (callback != null) {
+//                        Log.d("WebSocket", "Found callback for add food record response");
+//                        Log.d("WebSocket", message);
+//                        handler.post(() -> callback.onMessage(message));
+//                    }
+//                    return;
+//                }
+//                else if(message.contains("foodid")&&message.contains("name")){
+//
+//                    String type = WebSocketMessageType.FOOD_ITEM_GET;
+//                    WebSocketCallback callback = callbackMap.get(type);
+//                    if (callback != null) {
+//                        Log.d("WebSocket", "Found callback for add food record response");
+//                        Log.d("WebSocket", message);
+//                        handler.post(() -> callback.onMessage(message));
+//                    }
+//                    return;
+//                }
+//                else if(message.contains("用户信息更新成功")){
+//                    String type = WebSocketMessageType.UPDATE_USER;
+//                    WebSocketCallback callback = callbackMap.get(type);
+//                    if (callback != null) {
+//                        Log.d("WebSocket", "Found callback for add food record response");
+//                        Log.d("WebSocket", message);
+//                        handler.post(() -> callback.onMessage(message));
+//                    }
+//                    return;
+//                }
+//                else{//登录
+//                    String type = WebSocketMessageType.LOGIN;
+//                    //  Log.d("WebSocket", "Determined message type: " + type);
+//                    WebSocketCallback callback = callbackMap.get(type);
+//                    if (callback != null) {
+//                        Log.d("WebSocket", "Found callback for type: " + type);
+//                        handler.post(() -> callback.onMessage(message));
+//                    } else {
+//                        Log.d("WebSocket", "No callback found for type: " + type);
+//                    }
+//                }
+//
+//            }
+//            // 如果是数组格式
+//            else if (message.startsWith("[")&& !message.contains("caloriesPerHour")) {
+//                if(message.contains("foodRecordId")){
+//                    Log.d("WebSocket", "Received array message, treating as food record list");
+//                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_RECORD_GET);
+//                    if (callback != null) {
+//                        handler.post(() -> callback.onMessage(message));
+//                    }
+//                }
+//                else if(message.contains("foodid")){
+//                    Log.d("WebSocket", "Received array message, treating as food list");
+//                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_LIST);
+//                    if (callback != null) {
+//                        handler.post(() -> callback.onMessage(message));
+//                    }
+//                }
+//                else if (message.contains("exerciseRecordId")) {
+//                    Log.d("WebSocket", "Received array message, treating as exercise record list");
+//                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_RECORD_GET);
+//                    if (callback != null) {
+//                        handler.post(() -> callback.onMessage(message));
+//                    }
+//                }
+//
+//
+//            }
+//            else if (message.startsWith("[") && message.contains("caloriesPerHour")) {
+//                Log.d("WebSocket", "Received array message, treating as exercise list");
+//                WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_LIST);
+//                if (callback != null) {
+//                    handler.post(() -> callback.onMessage(message));
+//                }
+//            }
 
         } catch (Exception e) {
             Log.e("WebSocket", "Error handling message: " + e.getMessage());
