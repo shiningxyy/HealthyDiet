@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +47,21 @@ public class FoodlistActivity extends AppCompatActivity implements SidebarAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foodlist);
+        // 初始化 Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // 设置返回按钮的点击事件
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);  // 显示返回按钮
+            getSupportActionBar().setDisplayShowHomeEnabled(true);  // 启用返回按钮图标
+        }
+
+        // 返回按钮的点击监听器
+        toolbar.setNavigationOnClickListener(v -> {
+            // 处理返回操作
+            onBackPressed();  // 执行返回操作
+        });
 
         // 初始化 Handler，用于在主线程更新 UI
         handler = new Handler(getMainLooper());
