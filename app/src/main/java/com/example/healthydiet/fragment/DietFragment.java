@@ -1,7 +1,14 @@
 package com.example.healthydiet.fragment;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +16,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.healthydiet.R;
@@ -28,6 +39,8 @@ import com.example.healthydiet.websocket.WebSocketMessageType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,6 +56,8 @@ public class DietFragment extends Fragment {
     private Button breakfast_button;
     private Button lunch_button;
     private Button dinner_button;
+
+    private Button circularButton;
     private Button view_record;
     private Button diet_analysis;
     private WebSocketManager webSocketManager;
@@ -55,6 +70,9 @@ public class DietFragment extends Fragment {
     private double total_potassium=0;
     private double total_dietaryFiber=0;
     private  double generation;
+
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 101;
+    private static final int REQUEST_CODE_GALLERY = 100;
     //private User user;
     public DietFragment() {
         // Required empty public constructor
@@ -198,10 +216,106 @@ public class DietFragment extends Fragment {
             intent.putExtra("generation",generation);
             startActivity(intent);
         });
-
+// 请求权限
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
+        } else {
+            // 权限已授予，执行相册操作
+            openGallery();
+        }
+        circularButton = view.findViewById(R.id.circularButton);
+        circularButton.setOnClickListener(v -> openGallery());
         return view;
     }
+    // 权限请求结果回调
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 权限授予，打开相册
+                openGallery();
+            } else {
+                // 权限拒绝，提示用户
+                Toast.makeText(getActivity(), "权限被拒绝，无法访问相册", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
+    // 打开相册选择器
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent, REQUEST_CODE_GALLERY);
+    }
+
+    // 处理返回的图片信息
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_GALLERY && resultCode == Activity.RESULT_OK) {
+            Uri selectedImageUri = data.getData();  // 获取选中的图片 URI
+            if (selectedImageUri != null) {
+                getImageDetails(selectedImageUri);
+            }
+        }
+    }
+
+    // 获取图片的详细信息
+    private void getImageDetails(Uri imageUri) {
+        String[] projection = {
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Media.DISPLAY_NAME,
+                MediaStore.Images.Media.SIZE,
+                MediaStore.Images.Media.DATE_ADDED,
+                MediaStore.Images.Media.MIME_TYPE
+        };
+
+        try (Cursor cursor = getActivity().getContentResolver().query(imageUri, projection, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int idColumn = cursor.getColumnIndex(MediaStore.Images.Media._ID);
+                int nameColumn = cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME);
+                int sizeColumn = cursor.getColumnIndex(MediaStore.Images.Media.SIZE);
+                int dateAddedColumn = cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED);
+                int mimeTypeColumn = cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE);
+
+                long id = cursor.getLong(idColumn);
+                String name = cursor.getString(nameColumn);
+                long size = cursor.getLong(sizeColumn);
+                long dateAdded = cursor.getLong(dateAddedColumn);
+                String mimeType = cursor.getString(mimeTypeColumn);
+
+                Log.d("ImageDetails", "ID: " + id);
+                Log.d("ImageDetails", "Name: " + name);
+                Log.d("ImageDetails", "Size: " + size + " bytes");
+                Log.d("ImageDetails", "Date Added: " + dateAdded);
+                Log.d("ImageDetails", "Mime Type: " + mimeType);
+
+                // 将图片转为 Base64 字符串
+                String base64Image = convertImageToBase64(imageUri);
+                Log.d("ImageDetails", "Base64: " + base64Image); // 打印 Base64 编码的图片
+
+            }
+        }
+    }
+    private String convertImageToBase64(Uri imageUri) {
+        try (InputStream inputStream = getActivity().getContentResolver().openInputStream(imageUri)) {
+            // 将 InputStream 转为字节数组
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, length);
+            }
+            byte[] imageBytes = byteArrayOutputStream.toByteArray();
+
+            // 使用 Base64 编码字节数组
+            return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        } catch (Exception e) {
+            Log.e("ImageDetails", "Error converting image to Base64: " + e.getMessage());
+            return null;
+        }
+    }
     // 更新环形进度条
     private void updateProgressBar(int x,int max) {
         // 计算进度百分比
