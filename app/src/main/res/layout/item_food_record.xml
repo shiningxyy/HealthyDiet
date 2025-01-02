@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
-
     android:radius="8dp">
 
     <LinearLayout
