@@ -75,6 +75,14 @@
             android:text="登出"
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
+
+        <Button
+            android:id="@+id/reminderSettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="提醒设置"
+            android:textSize="16sp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

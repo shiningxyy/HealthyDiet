@@ -18,6 +18,7 @@ import com.example.healthydiet.UserManager;
 import com.example.healthydiet.activity.MainActivity;
 import com.example.healthydiet.activity.ModifyInfoActivity;
 import com.example.healthydiet.activity.ViewFoodRecordActivity;
+import com.example.healthydiet.activity.ReminderActivity;
 import com.example.healthydiet.entity.User;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -25,6 +26,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
     private Button logout;
     private Button modify_info;
+    private Button reminderSettingsButton;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -67,6 +69,12 @@ public class ProfileFragment extends Fragment {
         modify_info.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
             Intent intent = new Intent(getActivity(), ModifyInfoActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            startActivity(intent);
+        });
+
+        reminderSettingsButton = view.findViewById(R.id.reminderSettingsButton);
+        reminderSettingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ReminderActivity.class);
             startActivity(intent);
         });
 
