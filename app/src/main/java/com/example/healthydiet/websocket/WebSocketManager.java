@@ -264,25 +264,25 @@ public class WebSocketManager {
                     return;
                 }
 
-//                case BLOCK_USER_SUCCESS:{
-//                    String msg = get.getString("message");
-//                    Log.d("WebSocket", "Received block user message:"+msg);
-//                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.BLOCK_USER);
-//                    if (callback != null) {
-//                        handler.post(() -> callback.onMessage(msg));
-//                    }
-//                    return;
-//                }
-//
-//                case UNBLOCK_USER_SUCCESS:{
-//                    String msg = get.getString("message");
-//                    Log.d("WebSocket", "Received unblock user message:"+msg);
-//                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.UNBLOCK_USER);
-//                    if (callback != null) {
-//                        handler.post(() -> callback.onMessage(msg));
-//                    }
-//                    return;
-//                }
+                case BLOCK_USER_SUCCESS:{
+                    String msg = get.getString("message");
+                    Log.d("WebSocket", "Received block user message:"+msg);
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.BLOCK_USER);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
+
+                case UNBLOCK_USER_SUCCESS:{
+                    String msg = get.getString("message");
+                    Log.d("WebSocket", "Received unblock user message:"+msg);
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.UNBLOCK_USER);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
 
                     default:
                         break;
