@@ -38,11 +38,9 @@ import com.example.healthydiet.websocket.WebSocketMessageType;
 public class AllExerciseRecordActivity extends AppCompatActivity{
 
     private WebSocketManager webSocketManager;
-    private Handler handler;
-    private Context context;
 
     private ListView exerciseListView;
-    private SidebarAdapter sidebarAdapter;
+
     private ExerciseHistoryAdapter exersiceRecordListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +65,6 @@ public class AllExerciseRecordActivity extends AppCompatActivity{
             startActivity(intent);
         });
 
-        // 初始化 Handler，用于在主线程更新 UI
-        handler = new Handler(getMainLooper());
 
         webSocketManager = WebSocketManager.getInstance();
         webSocketManager.logConnectionStatus();  // 记录连接状态

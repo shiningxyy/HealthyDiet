@@ -1,44 +1,36 @@
 package com.example.healthydiet.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.ListView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import com.example.healthydiet.R;
 import com.example.healthydiet.adapter.ExerciseItemsAdapter;
-import com.example.healthydiet.adapter.FoodListAdapter;
-import com.example.healthydiet.adapter.SidebarAdapter;
+import com.example.healthydiet.adapter.UserAdapter;
 import com.example.healthydiet.entity.ExerciseItem;
-import com.example.healthydiet.entity.FoodItem;
+import com.example.healthydiet.websocket.WebSocketManager;
+import com.example.healthydiet.websocket.WebSocketMessageType;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
-import com.example.healthydiet.R;
-import com.example.healthydiet.websocket.WebSocketManager;
-import com.example.healthydiet.websocket.WebSocketMessageType;
-
-
-public class ExerciselistActivity extends AppCompatActivity{
-
+public class UserListActivity extends AppCompatActivity {
     private WebSocketManager webSocketManager;
 
-    private ListView exerciseListView;
+    private ListView userListView;
 
-    private ExerciseItemsAdapter exersiceListAdapter;
+    private UserAdapter userAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_exerciselist);
+        setContentView(R.layout.activity_userlist);
 
         // 初始化 Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -52,9 +44,7 @@ public class ExerciselistActivity extends AppCompatActivity{
 
         // 返回按钮的点击监听器
         toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(ExerciselistActivity.this, HomeActivity.class);
-            intent.putExtra("fragment_key", "HealthyFragment");
-
+            Intent intent = new Intent(UserListActivity.this, HomeActivity.class);
             startActivity(intent);
         });
 
@@ -62,7 +52,6 @@ public class ExerciselistActivity extends AppCompatActivity{
         webSocketManager = WebSocketManager.getInstance();
         webSocketManager.logConnectionStatus();  // 记录连接状态
 
-        // 注册食物列表回调
         webSocketManager.registerCallback(WebSocketMessageType.EXERCISE_LIST, message -> {
             Log.d("ExerciseList", "Received exercise list response: " + message);
             try {
@@ -116,5 +105,4 @@ public class ExerciselistActivity extends AppCompatActivity{
         exerciseListView.setAdapter(exersiceListAdapter);
 
     }
-
 }
