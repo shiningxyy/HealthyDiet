@@ -295,13 +295,18 @@ public class WebSocketManager {
                     String msg = get.getString("data");
                     Log.d("WebSocket", "Received array message, treating as all comment list");
                     WebSocketCallback callback = callbackMap.get(WebSocketMessageType.GET_ALL_COMMENTS);
-                    Log.d("WebSocket", "评论列表：111");
                     if (callback != null) {
-                        Log.d("WebSocket", "评论列表："+msg);
                         handler.post(() -> callback.onMessage(msg));
                     }
-                    else{
-                        Log.d("WebSocket", "callback=null");
+                    return;
+                }
+
+                case NOTIFICATION_GET_SUCCESS:{
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as notification list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.GET_USER_NOTIFICATION);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
                     }
                     return;
                 }
