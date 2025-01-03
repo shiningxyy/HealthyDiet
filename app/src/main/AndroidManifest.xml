@@ -39,6 +39,7 @@
         <activity android:name=".activity.AdminHomepage"/>
         <activity android:name=".activity.UserManageActivity"/>
         <activity android:name=".activity.PostManageActivity"/>
+        <activity android:name=".activity.CommentManageActivity"/>
     </application>
 
 </manifest>

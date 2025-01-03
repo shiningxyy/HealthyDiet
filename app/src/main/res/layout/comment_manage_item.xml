@@ -12,13 +12,15 @@
         android:orientation="horizontal"
         android:gravity="start">
 
-    <TextView
-        android:id="@+id/postIdTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="帖子id"
-        android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/commentIdTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="评论ID"
+            android:textSize="18sp"
+        />
 
         <TextView
             android:id="@+id/isBlockedTextView"
@@ -29,14 +31,16 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/postTitleTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="帖子标题"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/contentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="评论内容"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
 
     <!-- 水平排列的按钮 -->
     <LinearLayout

@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.healthydiet.R;
+import com.example.healthydiet.adapter.CommentManageAdapter;
 import com.example.healthydiet.adapter.PostManageAdapter;
-import com.example.healthydiet.adapter.UserManageAdapter;
+import com.example.healthydiet.entity.Comment;
 import com.example.healthydiet.entity.Post;
-import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
 
@@ -21,16 +21,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostManageActivity extends AppCompatActivity {
+public class CommentManageActivity extends AppCompatActivity {
     private WebSocketManager webSocketManager;
 
-    private ListView postListView;
+    private ListView commentListView;
 
-    private PostManageAdapter postManageAdapter;
+    private CommentManageAdapter commentManageAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_postmanage);
+        setContentView(R.layout.activity_commentmanage);
 
         // 初始化 Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -51,27 +51,28 @@ public class PostManageActivity extends AppCompatActivity {
         webSocketManager = WebSocketManager.getInstance();
         webSocketManager.logConnectionStatus();  // 记录连接状态
 
-        webSocketManager.registerCallback(WebSocketMessageType.GET_ALL_POSTS, message -> {
-            Log.d("PostManage", "Received post list response: " + message);
+        webSocketManager.registerCallback(WebSocketMessageType.GET_ALL_COMMENTS, message -> {
+            Log.d("CommentManage", "Received comment list response: " + message);
             try {
-                JSONArray postlists = new JSONArray(message);
-                List<Post> postList = new ArrayList<>();
+                JSONArray commentlists = new JSONArray(message);
+                List<Comment> commentList = new ArrayList<>();
 
-                for (int i = 0; i < postlists.length(); i++) {
-                    JSONObject postJson = postlists.getJSONObject(i);
-                    Post post = new Post(
-                            postJson.getInt("postId"),
-                            postJson.getString("title"),
-                            postJson.getInt("isOffending")
+                for (int i = 0; i < commentlists.length(); i++) {
+                    JSONObject commentJson = commentlists.getJSONObject(i);
+                    Comment comment = new Comment(
+                            commentJson.getInt("postId"),
+                            commentJson.getInt("commentId"),
+                            commentJson.getString("content"),
+                            commentJson.getInt("isOffending")
                     );
-                    postList.add(post);
+                    commentList.add(comment);
                 }
 
 
                 // 在主线程更新UI
-                runOnUiThread(() -> onPostListUpdated(postList));
+                runOnUiThread(() -> onCommentListUpdated(commentList));
             } catch (Exception e) {
-                Log.e("PostManage", "Error processing post list: " + e.getMessage());
+                Log.e("CommentManage", "Error processing comment list: " + e.getMessage());
                 e.printStackTrace();
             }
         });
@@ -92,11 +93,11 @@ public class PostManageActivity extends AppCompatActivity {
     }
 
     // 当接收到更新的数据时，这个方法会被调用
-    private void onPostListUpdated(List<Post> postList) {
+    private void onCommentListUpdated(List<Comment> commentList) {
 
-        postListView = findViewById(R.id.postListView);
-        postManageAdapter = new PostManageAdapter(postList,this);
-        postListView.setAdapter(postManageAdapter);
+        commentListView = findViewById(R.id.commentListView);
+        commentManageAdapter = new CommentManageAdapter(commentList,this);
+        commentListView.setAdapter(commentManageAdapter);
 
     }
 }

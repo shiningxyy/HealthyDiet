@@ -48,5 +48,14 @@ public class AdminHomepage extends AppCompatActivity {
             Intent intent = new Intent(AdminHomepage.this, PostManageActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
             startActivity(intent);
         });
+
+        // 评论管理
+        comment_button = findViewById(R.id.commentButton);
+        // 设置按钮点击事件，跳转到另一个 Activity
+        comment_button.setOnClickListener(v -> {
+            // 使用 Intent 跳转到新的 Activity
+            Intent intent = new Intent(AdminHomepage.this, CommentManageActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            startActivity(intent);
+        });
     }
 }
