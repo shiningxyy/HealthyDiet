@@ -13,6 +13,8 @@ import com.example.healthydiet.fragment.HealthyFragment;
 import com.example.healthydiet.fragment.ProfileFragment;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.fragment.app.FragmentManager;
 
 public class HomeActivity extends AppCompatActivity{
     private BottomNavigationView bottomNavigationView;

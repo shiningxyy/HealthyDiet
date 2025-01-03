@@ -198,6 +198,47 @@ public class WebSocketManager {
                     }
                     return;
                 }
+
+                case POST_GET_SUCCESS:{
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as post list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.GET_POST);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
+                case POST_GET_FAIL:{
+                    Log.d("WebSocket", "获取帖子失败");
+                }
+                case POST_CREATE_SUCCESS:{
+                    String msg = get.getString("message");
+                    Log.d("WebSocket", "Received create post message:"+msg);
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.ADD_POST);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
+
+                case COMMENT_CREATE_SUCCESS:{
+                    String msg = get.getString("message");
+                    Log.d("WebSocket", "Received create comment message:"+msg);
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.ADD_COMMENT);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
+                case COMMENT_GET_SUCCESS:{
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as comment list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.GET_POSTCOMMENTS);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
                     default:
                         break;
 
@@ -205,132 +246,12 @@ public class WebSocketManager {
 
 
             }
-//            // 首先尝试解析为JSONObject
-//            if (message.startsWith("{")) {
-//                // 处理注册响应的特殊情况
-//                if (message.contains("注册成功")) {
-//                    // 提取status字段
-//                 //   JSONObject partialJson = new JSONObject();
-//                 //   partialJson.put("status", 200);
-//                 //   partialJson.put("message", "注册成功");
-//                    String type = WebSocketMessageType.REGISTER;
-//                    WebSocketCallback callback = callbackMap.get(type);
-//                    if (callback != null) {
-//                        Log.d("WebSocket", "Found callback for register response");
-//                        handler.post(() -> callback.onMessage(message));
-//                    }
-//                    return;
-//                }
-//                else if (message.contains("食物记录添加成功")) {
-//
-//                    String type = WebSocketMessageType.FOOD_RECORD_ADD;
-//                    WebSocketCallback callback = callbackMap.get(type);
-//                    if (callback != null) {
-//                        Log.d("WebSocket", "Found callback for add food record response");
-//                        Log.d("WebSocket", message);
-//                        handler.post(() -> callback.onMessage(message));
-//                    }
-//                    return;
-//                }
-//                else if(message.contains("foodid")&&message.contains("name")){
-//
-//                    String type = WebSocketMessageType.FOOD_ITEM_GET;
-//                    WebSocketCallback callback = callbackMap.get(type);
-//                    if (callback != null) {
-//                        Log.d("WebSocket", "Found callback for add food record response");
-//                        Log.d("WebSocket", message);
-//                        handler.post(() -> callback.onMessage(message));
-//                    }
-//                    return;
-//                }
-//                else if(message.contains("用户信息更新成功")){
-//                    String type = WebSocketMessageType.UPDATE_USER;
-//                    WebSocketCallback callback = callbackMap.get(type);
-//                    if (callback != null) {
-//                        Log.d("WebSocket", "Found callback for add food record response");
-//                        Log.d("WebSocket", message);
-//                        handler.post(() -> callback.onMessage(message));
-//                    }
-//                    return;
-//                }
-//                else{//登录
-//                    String type = WebSocketMessageType.LOGIN;
-//                    //  Log.d("WebSocket", "Determined message type: " + type);
-//                    WebSocketCallback callback = callbackMap.get(type);
-//                    if (callback != null) {
-//                        Log.d("WebSocket", "Found callback for type: " + type);
-//                        handler.post(() -> callback.onMessage(message));
-//                    } else {
-//                        Log.d("WebSocket", "No callback found for type: " + type);
-//                    }
-//                }
-//
-//            }
-//            // 如果是数组格式
-//            else if (message.startsWith("[")&& !message.contains("caloriesPerHour")) {
-//                if(message.contains("foodRecordId")){
-//                    Log.d("WebSocket", "Received array message, treating as food record list");
-//                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_RECORD_GET);
-//                    if (callback != null) {
-//                        handler.post(() -> callback.onMessage(message));
-//                    }
-//                }
-//                else if(message.contains("foodid")){
-//                    Log.d("WebSocket", "Received array message, treating as food list");
-//                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.FOOD_LIST);
-//                    if (callback != null) {
-//                        handler.post(() -> callback.onMessage(message));
-//                    }
-//                }
-//                else if (message.contains("exerciseRecordId")) {
-//                    Log.d("WebSocket", "Received array message, treating as exercise record list");
-//                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_RECORD_GET);
-//                    if (callback != null) {
-//                        handler.post(() -> callback.onMessage(message));
-//                    }
-//                }
-//
-//
-//            }
-//            else if (message.startsWith("[") && message.contains("caloriesPerHour")) {
-//                Log.d("WebSocket", "Received array message, treating as exercise list");
-//                WebSocketCallback callback = callbackMap.get(WebSocketMessageType.EXERCISE_LIST);
-//                if (callback != null) {
-//                    handler.post(() -> callback.onMessage(message));
-//                }
-//            }
-
         } catch (Exception e) {
             Log.e("WebSocket", "Error handling message: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    // 根据消息内容判断消息类型
-    private String determineMessageType(JSONObject jsonMessage) {
-        try {
-            String rawMessage = jsonMessage.toString();
-            Log.d("WebSocket", "Determining message type for: " + rawMessage);
-            
-            // 登录响应
-            if (rawMessage.contains("phone") && !rawMessage.contains("status")) {
-                Log.d("WebSocket", "Message type determined as LOGIN");
-                return WebSocketMessageType.LOGIN;
-            }
-            
-            // 注册响应
-            if (rawMessage.contains("status")) {
-                Log.d("WebSocket", "Message type determined as REGISTER");
-                return WebSocketMessageType.REGISTER;
-            }
-
-            Log.d("WebSocket", "Unknown message type");
-            return "";
-        } catch (Exception e) {
-            Log.e("WebSocket", "Error determining message type: " + e.getMessage());
-            return "";
-        }
-    }
 
     // 发送消息的方法
     public void sendMessage(String message) {

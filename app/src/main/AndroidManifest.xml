@@ -34,6 +34,8 @@
         <activity android:name=".activity.ModifyInfoActivity"/>
         <activity android:name=".activity.AllExerciseRecordActivity" />
         <activity android:name=".activity.DietAnalysisActivity"/>
+        <activity android:name=".activity.AddPostActivity"/>
+        <activity android:name=".activity.PostDetailActivity"/>
     </application>
 
 </manifest>

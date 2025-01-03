@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/exercise_record_border"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- 标题栏 -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#8BC34A"
+        android:backgroundTint="#8CC34B"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="帖 子 详 情"
+        app:titleTextAppearance="@style/ToolbarTitleStyle"
+        app:navigationIcon="@android:drawable/ic_menu_revert"
+        />
+
+    <!-- 帖子标题和用户名 -->
+    <LinearLayout
+        android:id="@+id/linear"
+        android:orientation="horizontal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp">
+
+        <!-- 帖子标题 -->
+        <TextView
+            android:id="@+id/titleTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="帖子标题"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_weight="1" />
+
+        <!-- 用户名 -->
+        <TextView
+            android:id="@+id/usernameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="用户名"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"
+            android:gravity="end" />
+    </LinearLayout>
+
+    <!-- 帖子标签 -->
+    <TextView
+        android:id="@+id/tagsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="标签: 饮食, 运动"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/linear"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="8dp" />
+
+    <!-- 帖子内容 -->
+    <TextView
+        android:id="@+id/contentTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="这里是帖子内容..."
+        android:textSize="16sp"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintTop_toBottomOf="@id/tagsTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- 发帖时间 -->
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2025-01-01 10:00"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@id/contentTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/todayRecordsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/title_border"
+        android:padding="8dp"
+        android:text="评论列表"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/timeTextView" />
+
+    <!-- ListView 放入 FrameLayout 中 -->
+    <FrameLayout
+        android:id="@+id/listViewContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/todayRecordsTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/exercise_record_border">
+
+        <!-- ListView -->
+        <ListView
+            android:id="@+id/commentListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <!-- 评论按钮 -->
+    <Button
+        android:id="@+id/commentButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="评论"
+        android:textSize="16sp"
+        android:backgroundTint="#8BC34A"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
