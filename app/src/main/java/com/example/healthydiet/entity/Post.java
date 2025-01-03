@@ -19,7 +19,11 @@ public class Post implements Serializable {
         this.timestamp=timestamp;
         this.is_offending=is_offending;
     }
-
+    public Post(int post_id,String post_title,int is_offending){
+        this.post_id=post_id;
+        this.post_title=post_title;
+        this.is_offending=is_offending;
+    }
     public String getPost_content() {
         return post_content;
     }
@@ -42,5 +46,13 @@ public class Post implements Serializable {
 
     public int getPost_id() {
         return post_id;
+    }
+
+    public int getIs_offending() {
+        return is_offending;
+    }
+
+    public void setIs_offending(int is_offending) {
+        this.is_offending = is_offending;
     }
 }

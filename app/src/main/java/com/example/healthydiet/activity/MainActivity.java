@@ -69,34 +69,41 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject response = new JSONObject(message);
                 if (response.optString("phone").equals(phone)) {
                     Log.d("MainActivity", "Login successful");
-                    // 提取 userId 字段
-                    int userId = response.getInt("id");
-                    int isblocked=response.getInt("isBlocked");
-                    String profilePicture=response.getString("profilePicture");
-                    String name=response.getString("name");
-                    int weight=response.getInt("weight");
-                    int age=response.getInt("age");
-                    int height=response.getInt("height");
-                    int gender=response.getInt("gender");
-                    double activity_factor=response.getDouble("activityFactor");
-                    user = new User(name, password, weight, age, height, phone,gender,activity_factor);
-                    user.setProfilePicture(profilePicture);
-                    user.setUserId(userId);
-                    user.setIsblocked(isblocked);
-                   // user.setAge(age);
-                  //  user.setName(name);
-                  //  user.setWeight(weight);
-                  //  user.setHeight(height);
-                    user.setPassword(password);
-                    user.setPhone(phone);
-                    // 将 user 对象放入 Intent
-                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                   // intent.putExtra("user", user); // 将 User 对象传递过去
-                    // 使用 UserManager 设置 User 对象
-                    UserManager.getInstance().setUser(user);
-                    startActivity(intent);
 
-                    finish();
+                    int is_admin=response.getInt("isAdmin");
+                    if(is_admin==1){
+                        Intent intent = new Intent(MainActivity.this, AdminHomepage.class);
+                        String profilePicture=response.getString("profilePicture");
+                        String name=response.getString("name");
+                        intent.putExtra("profilePicture",profilePicture);
+                        intent.putExtra("name",name);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else{
+                        // 提取 userId 字段
+                        int userId = response.getInt("id");
+                        int isblocked=response.getInt("isBlocked");
+                        String profilePicture=response.getString("profilePicture");
+                        String name=response.getString("name");
+                        int weight=response.getInt("weight");
+                        int age=response.getInt("age");
+                        int height=response.getInt("height");
+                        int gender=response.getInt("gender");
+                        double activity_factor=response.getDouble("activityFactor");
+                        user = new User(name, password, weight, age, height, phone,gender,activity_factor);
+                        user.setProfilePicture(profilePicture);
+                        user.setUserId(userId);
+                        user.setIsblocked(isblocked);
+                        user.setPassword(password);
+                        user.setPhone(phone);
+
+                        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                        UserManager.getInstance().setUser(user);
+                        startActivity(intent);
+                        finish();
+                    }
+
                 } else {
                     Log.d("MainActivity", "账号或密码错误");
                     // 登录失败处理

@@ -17,6 +17,7 @@ import com.example.healthydiet.R;
 import com.example.healthydiet.UserManager;
 import com.example.healthydiet.activity.MainActivity;
 import com.example.healthydiet.activity.ModifyInfoActivity;
+import com.example.healthydiet.activity.NotificationListActivity;
 import com.example.healthydiet.activity.ViewFoodRecordActivity;
 import com.example.healthydiet.activity.ReminderActivity;
 import com.example.healthydiet.entity.User;
@@ -27,7 +28,7 @@ public class ProfileFragment extends Fragment {
     private Button logout;
     private Button reminderSettingsButton;
     private Button modify_info;
-
+    private Button notification;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -78,7 +79,12 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
-
+        notification=view.findViewById(R.id.notificationButton);
+        notification.setOnClickListener(v -> {
+            // 使用 Intent 跳转到新的 Activity
+            Intent intent = new Intent(getActivity(), NotificationListActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            startActivity(intent);
+        });
 
         return view;
     }

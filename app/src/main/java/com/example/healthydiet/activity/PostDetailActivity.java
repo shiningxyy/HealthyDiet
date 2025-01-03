@@ -77,11 +77,19 @@ public class PostDetailActivity extends AppCompatActivity {
             timeTextView.setText("发布于 "+post.getTimestamp());
 
         }
-
+        User user=UserManager.getInstance().getUser();
+        int is_blocked = user.getIsblocked();
         commentButton = findViewById(R.id.commentButton);
 
         commentButton.setOnClickListener(v -> {
-            showCommentPopup();
+
+            if (is_blocked == 0) {
+                // 如果未被封禁，执行跳转
+                showCommentPopup();
+            } else {
+                // 如果被封禁，显示提示信息
+                Toast.makeText(PostDetailActivity.this, "当前正在封禁中，不能评论", Toast.LENGTH_SHORT).show();
+            }
         });
 
         webSocketManager = WebSocketManager.getInstance();

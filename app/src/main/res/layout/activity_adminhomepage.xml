@@ -16,12 +16,12 @@
         android:contentDescription="Profile Image"
         android:src="@drawable/avater"
         app:civ_border_width="2dp"
-    app:civ_border_color="#FFFFFF"
-    app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
-    app:layout_constraintEnd_toStartOf="@+id/nicknameTextView"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    />
+        app:civ_border_color="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/buttonLayout"
+        app:layout_constraintEnd_toStartOf="@+id/nicknameTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
 
     <!-- 昵称 -->
@@ -55,27 +55,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nicknameTextView">
 
-        <!-- 修改信息按钮 -->
+
         <Button
-            android:id="@+id/editProfileButton"
+            android:id="@+id/userButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:backgroundTint="#8BC34A"
-            android:text="修改信息"
+            android:text="用户管理"
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
 
         <Button
-            android:id="@+id/notificationButton"
+            android:id="@+id/postButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:backgroundTint="#8BC34A"
-            android:text="查看系统通知"
+            android:text="帖子管理"
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
 
+        <Button
+            android:id="@+id/commentButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="#8BC34A"
+            android:text="评论管理"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
 
         <Button
             android:id="@+id/logoutButton"
@@ -85,14 +94,6 @@
             android:text="登出"
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
-
-        <Button
-            android:id="@+id/reminderSettingsButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:text="提醒设置"
-            android:textSize="16sp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,9 +22,6 @@ import java.util.List;
 import java.util.Map;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.healthydiet.R;
 import com.example.healthydiet.websocket.WebSocketManager;
@@ -34,11 +31,9 @@ import com.example.healthydiet.websocket.WebSocketMessageType;
 public class ExerciselistActivity extends AppCompatActivity{
 
     private WebSocketManager webSocketManager;
-    private Handler handler;
-    private Context context;
 
     private ListView exerciseListView;
-    private SidebarAdapter sidebarAdapter;
+
     private ExerciseItemsAdapter exersiceListAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +58,6 @@ public class ExerciselistActivity extends AppCompatActivity{
             startActivity(intent);
         });
 
-        // 初始化 Handler，用于在主线程更新 UI
-        handler = new Handler(getMainLooper());
 
         webSocketManager = WebSocketManager.getInstance();
         webSocketManager.logConnectionStatus();  // 记录连接状态
@@ -123,8 +116,5 @@ public class ExerciselistActivity extends AppCompatActivity{
         exerciseListView.setAdapter(exersiceListAdapter);
 
     }
-
-
-
 
 }
