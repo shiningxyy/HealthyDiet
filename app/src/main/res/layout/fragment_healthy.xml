@@ -19,100 +19,159 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="健 康 管 理" />
 
-    <!-- 运动趋势图 -->
-
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/exerciseTrendGraph"
-        android:layout_width="402dp"
-        android:layout_height="249dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" />
-
-    <TextView
-        android:id="@+id/todayExerciseTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="今日运动时间: 60分钟"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/exerciseTrendGraph"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="16dp" />
-
-    <!-- 消耗热量 -->
-    <TextView
-        android:id="@+id/todayCaloriesBurned"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="消耗热量: 500千卡"
-        android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/todayExerciseTime"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="8dp" />
-
-    <!-- 选择运动项目按钮 -->
-    <Button
-        android:id="@+id/goToExerciseSelectButton"
-        android:layout_width="366dp"
-        android:layout_height="51dp"
-        android:layout_marginTop="24dp"
-        android:backgroundTint="@color/unselected_item_color"
-        android:text="记录运动"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/todayCaloriesBurned" />
-
-    <!-- 今日记录标题 -->
-
-    <Button
-        android:id="@+id/allRecordButton"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:text="查看所有记录>>"
-        android:textAllCaps="false"
-        android:textColor="#4CAF50"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/goToExerciseSelectButton" />
-
-    <TextView
-        android:id="@+id/todayRecordsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/title_border"
-        android:padding="8dp"
-        android:text="今日记录"
-        android:textColor="#ffffff"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/goToExerciseSelectButton"
-        android:layout_marginBottom="0dp" />
-
-    <!-- ListView 放入 FrameLayout 中 -->
-    <FrameLayout
-        android:id="@+id/listViewContainer"
+    <!-- 滚动区域开始 -->
+    <android.widget.ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/todayRecordsTitle"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="0dp"
-        android:background="@drawable/exercise_record_border">
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- ListView -->
-        <ListView
-            android:id="@+id/exerciseListView"
+        <!-- 内容部分 -->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </FrameLayout>
+            android:layout_height="wrap_content">
+
+            <!-- 运动趋势图 -->
+            <TextView
+                android:id="@+id/weekExercise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="一周运动趋势"
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/exerciseTrendGraph"
+                android:layout_width="match_parent"
+                android:layout_height="249dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/weekExercise" />
+
+            <TextView
+                android:id="@+id/weekWeight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="一周体重趋势"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/exerciseTrendGraph"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/weightTrendGraph"
+                android:layout_width="match_parent"
+                android:layout_height="249dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/weekWeight" />
+
+            <TextView
+                android:id="@+id/todayExerciseTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="今日运动时间: 60分钟"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/weightTrendGraph"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp" />
+
+            <!-- 消耗热量 -->
+            <TextView
+                android:id="@+id/todayCaloriesBurned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="消耗热量: 500千卡"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/todayExerciseTime"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="8dp" />
+
+            <!-- 选择运动项目按钮 -->
+            <Button
+                android:id="@+id/goToExerciseSelectButton"
+                android:layout_width="366dp"
+                android:layout_height="51dp"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/unselected_item_color"
+                android:text="记录运动"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/todayCaloriesBurned" />
+
+            <!-- 今日记录标题 -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/todayRecordsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:elevation="4dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp"
+                app:layout_constraintTop_toBottomOf="@id/goToExerciseSelectButton">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:id="@+id/todayRecordsTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/title_border"
+                        android:padding="8dp"
+                        android:text="今日记录"
+                        android:textColor="#ffffff"
+                        android:textSize="18sp" />
+
+                    <!-- ListView 放入 FrameLayout 中 -->
+                    <FrameLayout
+                        android:id="@+id/listViewContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/exercise_record_border">
+
+                        <ListView
+                            android:id="@+id/exerciseListView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </FrameLayout>
+
+                    <Button
+                        android:id="@+id/allRecordButton"
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:text="查看所有记录>>"
+                        android:textAllCaps="false"
+                        android:textColor="#4CAF50"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/goToExerciseSelectButton" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </android.widget.ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
