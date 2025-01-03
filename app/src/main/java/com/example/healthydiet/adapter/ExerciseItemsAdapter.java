@@ -119,27 +119,6 @@ public class ExerciseItemsAdapter extends BaseAdapter {
             }
             webSocketManager.sendMessage(addExerciseRecordMessage);
 
-//            String durationStr = exerciseDurationEditText.getText().toString();
-//            int duration = 0;
-//
-//            if (!durationStr.isEmpty()) {
-//                duration = Integer.parseInt(durationStr);  // 获取运动时长
-//            }
-//
-//            // 计算消耗的卡路里
-//            int burnedCalories = (int) ((exerciseItem.getCaloriesPerHour() / 60) * duration);
-//
-//            // 跳转到 FoodRecord 页面
-//            // 你可以将 foodItem 的相关数据传递到 FoodRecordActivity
-//            intent.putExtra("exerciseId", exerciseItem.getExerciseId());
-//            intent.putExtra("caloriesPerHour", exerciseItem.getCaloriesPerHour());
-//            intent.putExtra("name", exerciseItem.getName());
-//            intent.putExtra("duration", duration);
-//            intent.putExtra("burnedCalories", burnedCalories);
-//            intent.putExtra("date", getCurrentTime());
-//
-//            // 可以根据需求传递更多数据
-//            context.startActivity(intent);
             dialog.dismiss();  // 关闭 Dialog
 
         });

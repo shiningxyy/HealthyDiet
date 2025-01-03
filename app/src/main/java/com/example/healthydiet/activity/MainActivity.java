@@ -69,23 +69,28 @@ public class MainActivity extends AppCompatActivity {
                 JSONObject response = new JSONObject(message);
                 if (response.optString("phone").equals(phone)) {
                     Log.d("MainActivity", "Login successful");
-                    // 提取 userId 字段
-                    int userId = response.getInt("id");
-                    int isblocked=response.getInt("isBlocked");
-                    String profilePicture=response.getString("profilePicture");
-                    String name=response.getString("name");
-                    int weight=response.getInt("weight");
-                    int age=response.getInt("age");
-                    int height=response.getInt("height");
-                    int gender=response.getInt("gender");
-                    double activity_factor=response.getDouble("activityFactor");
+
                     int is_admin=response.getInt("isAdmin");
                     if(is_admin==1){
                         Intent intent = new Intent(MainActivity.this, AdminHomepage.class);
+                        String profilePicture=response.getString("profilePicture");
+                        String name=response.getString("name");
+                        intent.putExtra("profilePicture",profilePicture);
+                        intent.putExtra("name",name);
                         startActivity(intent);
                         finish();
                     }
                     else{
+                        // 提取 userId 字段
+                        int userId = response.getInt("id");
+                        int isblocked=response.getInt("isBlocked");
+                        String profilePicture=response.getString("profilePicture");
+                        String name=response.getString("name");
+                        int weight=response.getInt("weight");
+                        int age=response.getInt("age");
+                        int height=response.getInt("height");
+                        int gender=response.getInt("gender");
+                        double activity_factor=response.getDouble("activityFactor");
                         user = new User(name, password, weight, age, height, phone,gender,activity_factor);
                         user.setProfilePicture(profilePicture);
                         user.setUserId(userId);

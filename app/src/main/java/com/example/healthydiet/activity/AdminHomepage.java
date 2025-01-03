@@ -13,9 +13,14 @@ public class AdminHomepage extends AppCompatActivity {
     private Button user_button;
     private Button post_button;
     private Button comment_button;
+    private String profilePicture;
+    private String name;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adminhomepage);
+
+        profilePicture=getIntent().getStringExtra("profilePicture");
+        name=getIntent().getStringExtra("name");
 
         // 登出
         logout = findViewById(R.id.logoutButton);
@@ -31,7 +36,7 @@ public class AdminHomepage extends AppCompatActivity {
         // 设置按钮点击事件，跳转到另一个 Activity
         user_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
-            Intent intent = new Intent(AdminHomepage.this, MainActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            Intent intent = new Intent(AdminHomepage.this, UserListActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
             startActivity(intent);
         });
 

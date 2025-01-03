@@ -12,6 +12,7 @@ import com.example.healthydiet.R;
 import com.example.healthydiet.adapter.ExerciseItemsAdapter;
 import com.example.healthydiet.adapter.UserAdapter;
 import com.example.healthydiet.entity.ExerciseItem;
+import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
 
@@ -44,65 +45,66 @@ public class UserListActivity extends AppCompatActivity {
 
         // 返回按钮的点击监听器
         toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(UserListActivity.this, HomeActivity.class);
-            startActivity(intent);
+            // 处理返回操作
+            onBackPressed();  // 执行返回操作
         });
-
 
         webSocketManager = WebSocketManager.getInstance();
         webSocketManager.logConnectionStatus();  // 记录连接状态
 
-        webSocketManager.registerCallback(WebSocketMessageType.EXERCISE_LIST, message -> {
-            Log.d("ExerciseList", "Received exercise list response: " + message);
+        webSocketManager.registerCallback(WebSocketMessageType.GET_ALL_USERS, message -> {
+            Log.d("UserList", "Received user list response: " + message);
             try {
-                JSONArray exerciseItems = new JSONArray(message);
-                List<ExerciseItem> exerciseItemList = new ArrayList<>();
+                JSONArray userlists = new JSONArray(message);
+                List<User> userList = new ArrayList<>();
 
-                for (int i = 0; i < exerciseItems.length(); i++) {
-                    JSONObject exerciseJson = exerciseItems.getJSONObject(i);
-                    ExerciseItem exerciseItem = new ExerciseItem(
-                            exerciseJson.getString("name"),
-                            exerciseJson.getDouble("caloriesPerHour")
+                for (int i = 0; i < userlists.length(); i++) {
+                    JSONObject userJson = userlists.getJSONObject(i);
+                    User user = new User(
+                            userJson.getString("name"),
+                            userJson.getString("password"),
+                            userJson.getInt("weight"),
+                            userJson.getInt("age"),
+                            userJson.getInt("height"),
+                            userJson.getString("phone"),
+                            userJson.getInt("gender"),
+                            userJson.getDouble("activityFactor")
                     );
-                    int id = exerciseJson.getInt("exerciseId");
-                    Log.d("ExerciseList", "id: " + id);
-
-                    exerciseItem.setExerciseId(id);
-                    exerciseItemList.add(exerciseItem);
+                    user.setUserId(userJson.getInt("id"));
+                    user.setIsblocked(userJson.getInt("isBlocked"));
+                    userList.add(user);
                 }
 
 
-
                 // 在主线程更新UI
-                runOnUiThread(() -> onExerciseListUpdated(exerciseItemList));
+                runOnUiThread(() -> onUserListUpdated(userList));
             } catch (Exception e) {
-                Log.e("ExerciseList", "Error processing exerecise list: " + e.getMessage());
+                Log.e("UserList", "Error processing user list: " + e.getMessage());
                 e.printStackTrace();
             }
         });
 
         // 确保WebSocket已连接后再发送请求
         if (!webSocketManager.isConnected()) {
-            Log.d("ExerciseList", "WebSocket not connected, attempting to reconnect...");
+            Log.d("UserList", "WebSocket not connected, attempting to reconnect...");
             webSocketManager.reconnect();
         }
 
-        webSocketManager.sendMessage("getAllExerciseItem");
+        webSocketManager.sendMessage("getAllUsers:");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        webSocketManager.unregisterCallback(WebSocketMessageType.EXERCISE_LIST);
+        webSocketManager.unregisterCallback(WebSocketMessageType.GET_ALL_USERS);
     }
 
     // 当接收到更新的数据时，这个方法会被调用
-    private void onExerciseListUpdated(List<ExerciseItem> exerciseItemList) {
+    private void onUserListUpdated(List<User> userList) {
 
-        exerciseListView = findViewById(R.id.exerciseItemsListView);
-
-        exersiceListAdapter = new ExerciseItemsAdapter(exerciseItemList,this);
-        exerciseListView.setAdapter(exersiceListAdapter);
+        userListView = findViewById(R.id.userListView);
+        userAdapter = new UserAdapter(userList,this);
+        userListView.setAdapter(userAdapter);
 
     }
 }

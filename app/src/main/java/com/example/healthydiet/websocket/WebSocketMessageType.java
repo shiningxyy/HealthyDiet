@@ -16,5 +16,7 @@ public class WebSocketMessageType {
     public static final String ADD_COMMENT="createComment";
     public static final String GET_POSTCOMMENTS="getPostComments";
     public static final String GET_ALL_USERS="getAllUsers";
+    public static final String BLOCK_USER="blockUser";
+    public static final String UNBLOCK_USER="unblockUser";
     // 添加其他消息类型...
 } 

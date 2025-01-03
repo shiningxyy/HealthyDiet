@@ -37,6 +37,7 @@
         <activity android:name=".activity.AddPostActivity"/>
         <activity android:name=".activity.PostDetailActivity"/>
         <activity android:name=".activity.AdminHomepage"/>
+        <activity android:name=".activity.UserListActivity"/>
     </application>
 
 </manifest>
