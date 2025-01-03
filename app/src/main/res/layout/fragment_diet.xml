@@ -160,12 +160,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/weekCaloriesBurned" />
 
+    <TextView
+        android:id="@+id/BMI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="BMI:"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/weightTrendGraph"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp" />
+
+    <!-- 消耗热量 -->
+    <TextView
+        android:id="@+id/bodyFatPercentage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="体脂率:"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/BMI"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="8dp" />
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/circularButton"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_centerInParent="true"
-        android:layout_marginStart="284dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
         app:backgroundTint="#8BC34A"
         app:icon="@drawable/ic_camera"

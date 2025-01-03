@@ -28,6 +28,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.healthydiet.R;
 import com.example.healthydiet.UserManager;
+import com.example.healthydiet.activity.AddFoodRecordActivity;
 import com.example.healthydiet.activity.DietAnalysisActivity;
 import com.example.healthydiet.activity.FoodlistActivity;
 import com.example.healthydiet.activity.MainActivity;
@@ -37,6 +38,7 @@ import com.example.healthydiet.adapter.ExerciseTodayAdapter;
 import com.example.healthydiet.adapter.FoodRecordAdapter;
 import com.example.healthydiet.adapter.PostListAdapter;
 import com.example.healthydiet.entity.ExerciseRecord;
+import com.example.healthydiet.entity.FoodItem;
 import com.example.healthydiet.entity.FoodRecord;
 import com.example.healthydiet.entity.Post;
 import com.example.healthydiet.entity.User;
@@ -96,7 +98,7 @@ public class DietFragment extends Fragment {
     private double total_dietaryFiber=0;
     private  double generation;
     private LineChart weightTrendGraph;
-
+    private TextView BMI, bodyFatPercentage;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 101;
     private static final int REQUEST_CODE_GALLERY = 100;
     //private User user;
@@ -251,7 +253,8 @@ public class DietFragment extends Fragment {
         }
         circularButton = view.findViewById(R.id.circularButton);
         circularButton.setOnClickListener(v -> openGallery());
-
+        BMI = view.findViewById(R.id.BMI);
+        bodyFatPercentage = view.findViewById(R.id.bodyFatPercentage);
         webSocketManager.registerCallback(WebSocketMessageType.WEIGHT_RECORD_GET, message -> {
             Log.d("WeightRecord", "Received WeightRecord list response: " + message);
             try {
@@ -268,6 +271,19 @@ public class DietFragment extends Fragment {
 
                     WeightList.add(weightRecord);
                 }
+                double BMIdata,bodyFatPercentageData;
+                BMIdata=user.getWeight()/(user.getHeight()*user.getHeight()/10000.0);
+                BMI.setText("BMI: " + BMIdata);
+                if(user.getGender()==0) {
+                    bodyFatPercentageData=1.20*BMIdata + 0.23* user.getAge()-16.2;
+                    bodyFatPercentage.setText("体脂率: " +bodyFatPercentageData);
+                }
+                else{
+                    bodyFatPercentageData=1.20*BMIdata + 0.23* user.getAge()-5.4;
+                    bodyFatPercentage.setText("体脂率: " + bodyFatPercentageData);
+
+                }
+
 
                 getActivity().runOnUiThread(() -> setupWeightTrendGraph(WeightList));
 
@@ -318,6 +334,68 @@ public class DietFragment extends Fragment {
             Uri selectedImageUri = data.getData();  // 获取选中的图片 URI
             if (selectedImageUri != null) {
                 getImageDetails(selectedImageUri);
+
+                webSocketManager.registerCallback(WebSocketMessageType.FOOD_IDENTIFY, message -> {
+                    Log.d("FoodIdentify", "Received FoodIdentify response: " + message);
+                    try {
+                        // 解析 JSON 数据
+                        JSONObject jsonResponse = new JSONObject(message);
+
+                        // 检查 code 和 status 是否符合预期
+                        int code = jsonResponse.optInt("code", -1);
+                        int status = jsonResponse.optInt("status", -1);
+
+                        if (code == 64 && status == 200) {
+                            // 获取 "data" 对象
+                            JSONObject foodJson = jsonResponse.optJSONObject("data");
+
+                            if (foodJson != null) {
+                                // 解析食物信息
+                                String name = foodJson.optString("name", "Unknown");
+                                String type = foodJson.optString("type", "Unknown");
+                                int calories = foodJson.optInt("calories", 0);
+                                double fat = foodJson.optDouble("fat", 0.0);
+                                double protein = foodJson.optDouble("protein", 0.0);
+                                double carbohydrates = foodJson.optDouble("carbohydrates", 0.0);
+                                double potassium = foodJson.optDouble("potassium", 0.0);
+                                double sodium = foodJson.optDouble("sodium", 0.0);
+                                double dietaryFiber = foodJson.optDouble("dietaryFiber", 0.0);
+                                int foodid = foodJson.optInt("foodid", -1);  // 默认 -1 如果没有找到 foodid
+
+                                // 创建 FoodItem 对象
+                                FoodItem foodItem = new FoodItem(
+                                        name, type, calories, carbohydrates, dietaryFiber, potassium, sodium, fat, protein
+                                );
+                                foodItem.setFoodid(foodid);
+
+                                // 将数据传递给 AddFoodRecordActivity
+                                Intent intent = new Intent(getActivity(), AddFoodRecordActivity.class);
+                                intent.putExtra("food_name", foodItem.getName());
+                                intent.putExtra("food_calories", foodItem.getCalories());
+                                intent.putExtra("food_fat", foodItem.getFat());
+                                intent.putExtra("food_protein", foodItem.getProtein());
+                                intent.putExtra("food_carbohydrates", foodItem.getCarbohydrates());
+                                intent.putExtra("food_id", foodItem.getFoodid());
+                                intent.putExtra("food_DietaryFiber", foodItem.getDietaryFiber());
+                                intent.putExtra("food_Potassium", foodItem.getPotassium());
+                                intent.putExtra("food_Sodium", foodItem.getSodium());
+
+                                // 确保 getContext() 不为 null
+                                if (getActivity() != null) {
+                                    getActivity().startActivity(intent);
+                                }
+                            }
+                        } else {
+                            Log.e("FoodIdentify", "Error: Invalid response code or status");
+                        }
+                    } catch (Exception e) {
+                        Log.e("FoodIdentify", "Error processing response: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                });
+
+
+
             }
         }
     }
