@@ -291,7 +291,20 @@ public class WebSocketManager {
                     return;
                 }
 
-                case
+                case COMMENT_GET_ALL_SUCCESS:{
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as all comment list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.GET_ALL_COMMENTS);
+                    Log.d("WebSocket", "评论列表：111");
+                    if (callback != null) {
+                        Log.d("WebSocket", "评论列表："+msg);
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    else{
+                        Log.d("WebSocket", "callback=null");
+                    }
+                    return;
+                }
                     default:
                         break;
 

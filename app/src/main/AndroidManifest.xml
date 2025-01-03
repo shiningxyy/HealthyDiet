@@ -40,6 +40,7 @@
         <activity android:name=".activity.UserManageActivity"/>
         <activity android:name=".activity.PostManageActivity"/>
         <activity android:name=".activity.CommentManageActivity"/>
+        <activity android:name=".activity.NotificationListActivity"/>
     </application>
 
 </manifest>

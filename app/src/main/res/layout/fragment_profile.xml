@@ -66,6 +66,16 @@
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
 
+        <Button
+            android:id="@+id/notificationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="#8BC34A"
+            android:text="查看系统通知"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF" />
+
 
         <Button
             android:id="@+id/logoutButton"

@@ -67,8 +67,6 @@ public class CommentManageActivity extends AppCompatActivity {
                     );
                     commentList.add(comment);
                 }
-
-
                 // 在主线程更新UI
                 runOnUiThread(() -> onCommentListUpdated(commentList));
             } catch (Exception e) {
@@ -79,17 +77,17 @@ public class CommentManageActivity extends AppCompatActivity {
 
         // 确保WebSocket已连接后再发送请求
         if (!webSocketManager.isConnected()) {
-            Log.d("PostManage", "WebSocket not connected, attempting to reconnect...");
+            Log.d("CommentManage", "WebSocket not connected, attempting to reconnect...");
             webSocketManager.reconnect();
         }
 
-        webSocketManager.sendMessage("getAllPosts:");
+        webSocketManager.sendMessage("getAllComments:");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        webSocketManager.unregisterCallback(WebSocketMessageType.GET_ALL_POSTS);
+        webSocketManager.unregisterCallback(WebSocketMessageType.GET_ALL_COMMENTS);
     }
 
     // 当接收到更新的数据时，这个方法会被调用
