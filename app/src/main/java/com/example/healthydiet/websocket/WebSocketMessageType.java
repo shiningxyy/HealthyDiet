@@ -11,6 +11,9 @@ public class WebSocketMessageType {
     public static final String EXERCISE_RECORD_ADD = "AddExerciseRecord";
     public static final String EXERCISE_LIST = "getAllExerciseItem";
     public static final String UPDATE_USER="updateUser";
+
+    public static final String FOOD_IDENTIFY="identify";
+
     public static final String ADD_POST="createPost";
     public static final String GET_POST="getVisiblePosts";
     public static final String ADD_COMMENT="createComment";
