@@ -25,8 +25,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
     private Button logout;
-    private Button modify_info;
     private Button reminderSettingsButton;
+    private Button modify_info;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -65,6 +66,11 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+        reminderSettingsButton = view.findViewById(R.id.reminderSettingsButton);
+        reminderSettingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ReminderActivity.class);
+            startActivity(intent);
+        });
         modify_info=view.findViewById(R.id.editProfileButton);
         modify_info.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
@@ -72,11 +78,7 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
-        reminderSettingsButton = view.findViewById(R.id.reminderSettingsButton);
-        reminderSettingsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ReminderActivity.class);
-            startActivity(intent);
-        });
+
 
         return view;
     }

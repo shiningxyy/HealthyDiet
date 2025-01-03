@@ -52,6 +52,13 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
+                    <Switch
+                        android:id="@+id/breakfastSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:layout_marginEnd="8dp"/>
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -83,6 +90,13 @@
                     android:gravity="center_vertical"
                     android:layout_marginTop="16dp">
 
+                    <Switch
+                        android:id="@+id/lunchSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:layout_marginEnd="8dp"/>
+
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -113,6 +127,13 @@
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:layout_marginTop="16dp">
+
+                    <Switch
+                        android:id="@+id/dinnerSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:layout_marginEnd="8dp"/>
 
                     <TextView
                         android:layout_width="0dp"
@@ -155,6 +176,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
+
+                <Switch
+                    android:id="@+id/waterSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false"
+                    android:layout_marginEnd="8dp"/>
 
                 <TextView
                     android:layout_width="wrap_content"
