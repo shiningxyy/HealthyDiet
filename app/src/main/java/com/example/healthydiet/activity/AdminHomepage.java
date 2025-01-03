@@ -36,7 +36,7 @@ public class AdminHomepage extends AppCompatActivity {
         // 设置按钮点击事件，跳转到另一个 Activity
         user_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
-            Intent intent = new Intent(AdminHomepage.this, UserListActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            Intent intent = new Intent(AdminHomepage.this, UserManageActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
             startActivity(intent);
         });
 
@@ -45,7 +45,7 @@ public class AdminHomepage extends AppCompatActivity {
         // 设置按钮点击事件，跳转到另一个 Activity
         post_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
-            Intent intent = new Intent(AdminHomepage.this, MainActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            Intent intent = new Intent(AdminHomepage.this, PostManageActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
             startActivity(intent);
         });
     }

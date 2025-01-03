@@ -1,6 +1,5 @@
 package com.example.healthydiet.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
@@ -9,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.healthydiet.R;
-import com.example.healthydiet.adapter.ExerciseItemsAdapter;
-import com.example.healthydiet.adapter.UserAdapter;
-import com.example.healthydiet.entity.ExerciseItem;
+import com.example.healthydiet.adapter.PostManageAdapter;
+import com.example.healthydiet.adapter.UserManageAdapter;
+import com.example.healthydiet.entity.Post;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
@@ -22,16 +21,16 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserListActivity extends AppCompatActivity {
+public class PostManageActivity extends AppCompatActivity {
     private WebSocketManager webSocketManager;
 
-    private ListView userListView;
+    private ListView postListView;
 
-    private UserAdapter userAdapter;
+    private PostManageAdapter postManageAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_userlist);
+        setContentView(R.layout.activity_postmanage);
 
         // 初始化 Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -53,44 +52,37 @@ public class UserListActivity extends AppCompatActivity {
         webSocketManager.logConnectionStatus();  // 记录连接状态
 
         webSocketManager.registerCallback(WebSocketMessageType.GET_ALL_USERS, message -> {
-            Log.d("UserList", "Received user list response: " + message);
+            Log.d("PostManage", "Received post list response: " + message);
             try {
-                JSONArray userlists = new JSONArray(message);
-                List<User> userList = new ArrayList<>();
+                JSONArray postlists = new JSONArray(message);
+                List<Post> postList = new ArrayList<>();
 
-                for (int i = 0; i < userlists.length(); i++) {
-                    JSONObject userJson = userlists.getJSONObject(i);
-                    User user = new User(
-                            userJson.getString("name"),
-                            userJson.getString("password"),
-                            userJson.getInt("weight"),
-                            userJson.getInt("age"),
-                            userJson.getInt("height"),
-                            userJson.getString("phone"),
-                            userJson.getInt("gender"),
-                            userJson.getDouble("activityFactor")
+                for (int i = 0; i < postlists.length(); i++) {
+                    JSONObject postJson = postlists.getJSONObject(i);
+                    Post post = new Post(
+                            postJson.getInt("postId"),
+                            postJson.getString("title"),
+                            postJson.getInt("isOffending")
                     );
-                    user.setUserId(userJson.getInt("id"));
-                    user.setIsblocked(userJson.getInt("isBlocked"));
-                    userList.add(user);
+                    postList.add(post);
                 }
 
 
                 // 在主线程更新UI
-                runOnUiThread(() -> onUserListUpdated(userList));
+                runOnUiThread(() -> onPostListUpdated(postList));
             } catch (Exception e) {
-                Log.e("UserList", "Error processing user list: " + e.getMessage());
+                Log.e("PostManage", "Error processing post list: " + e.getMessage());
                 e.printStackTrace();
             }
         });
 
         // 确保WebSocket已连接后再发送请求
         if (!webSocketManager.isConnected()) {
-            Log.d("UserList", "WebSocket not connected, attempting to reconnect...");
+            Log.d("PostManage", "WebSocket not connected, attempting to reconnect...");
             webSocketManager.reconnect();
         }
 
-        webSocketManager.sendMessage("getAllUsers:");
+        webSocketManager.sendMessage("getAllPosts:");
     }
 
     @Override
@@ -100,11 +92,11 @@ public class UserListActivity extends AppCompatActivity {
     }
 
     // 当接收到更新的数据时，这个方法会被调用
-    private void onUserListUpdated(List<User> userList) {
+    private void onPostListUpdated(List<Post> postList) {
 
-        userListView = findViewById(R.id.userListView);
-        userAdapter = new UserAdapter(userList,this);
-        userListView.setAdapter(userAdapter);
+        postListView = findViewById(R.id.postListView);
+        postManageAdapter = new PostManageAdapter(postList,this);
+        postListView.setAdapter(postManageAdapter);
 
     }
 }

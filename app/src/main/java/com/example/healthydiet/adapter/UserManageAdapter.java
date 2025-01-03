@@ -1,7 +1,6 @@
 package com.example.healthydiet.adapter;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,27 +8,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.healthydiet.R;
-import com.example.healthydiet.UserManager;
-import com.example.healthydiet.entity.ExerciseItem;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-public class UserAdapter extends BaseAdapter {
+public class UserManageAdapter extends BaseAdapter {
     private List<User> userList;
     private Context context;
     private WebSocketManager webSocketManager;
 
-    public UserAdapter(List<User> userList, Context context) {
+    public UserManageAdapter(List<User> userList, Context context) {
         this.userList = userList;
         this.context = context;
     }
@@ -51,17 +44,17 @@ public class UserAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        UserAdapter.ViewHolder viewHolder;
+        UserManageAdapter.ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.user_item, parent, false);
-            viewHolder = new UserAdapter.ViewHolder();
+            convertView = LayoutInflater.from(context).inflate(R.layout.user_manage_item, parent, false);
+            viewHolder = new UserManageAdapter.ViewHolder();
             viewHolder.userIdTextView = convertView.findViewById(R.id.userIdTextView);
             viewHolder.isBlockedTextView = convertView.findViewById(R.id.isBlockedTextView);
             viewHolder.block = convertView.findViewById(R.id.block);
             viewHolder.unblock = convertView.findViewById(R.id.unblock);
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (UserAdapter.ViewHolder) convertView.getTag();
+            viewHolder = (UserManageAdapter.ViewHolder) convertView.getTag();
         }
 
         User user = userList.get(position);

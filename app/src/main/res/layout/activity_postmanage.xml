@@ -16,13 +16,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="用 户 列 表"
+        app:title="帖 子 管 理"
         app:titleTextAppearance="@style/ToolbarTitleStyle"
         app:navigationIcon="@android:drawable/ic_menu_revert"/>
 
     <!-- ListView -->
     <ListView
-        android:id="@+id/userListView"
+        android:id="@+id/postListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/white"

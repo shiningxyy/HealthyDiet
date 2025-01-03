@@ -115,7 +115,8 @@ public class WebSocketManager {
                     return;
                 }
                 case LOGIN_SUCCESS:
-                 {
+
+                case ADMIN_LOGIN_SUCCESS: {
                      String msg=get.getString("data");
                      String type = WebSocketMessageType.LOGIN;
                      //  Log.d("WebSocket", "Determined message type: " + type);
@@ -250,20 +251,6 @@ public class WebSocketManager {
                     return;
                 }
 
-                case ADMIN_LOGIN_SUCCESS:{
-                    String msg=get.getString("admin");
-                    String type = WebSocketMessageType.LOGIN;
-                    //  Log.d("WebSocket", "Determined message type: " + type);
-                    WebSocketCallback callback = callbackMap.get(type);
-                    if (callback != null) {
-                        Log.d("WebSocket", "Found callback for type: " + type);
-                        handler.post(() -> callback.onMessage(msg));
-                    } else {
-                        Log.d("WebSocket", "No callback found for type: " + type);
-                    }
-                    return;
-                }
-
                 case BLOCK_USER_SUCCESS:{
                     String msg = get.getString("message");
                     Log.d("WebSocket", "Received block user message:"+msg);
@@ -284,6 +271,15 @@ public class WebSocketManager {
                     return;
                 }
 
+                case POST_GET_ALL_SUCCESS:{
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as post list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.GET_ALL_POSTS);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
                     default:
                         break;
 

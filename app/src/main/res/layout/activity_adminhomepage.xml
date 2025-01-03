@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:backgroundTint="#8BC34A"
-            android:text="帖子管理"
+            android:text="评论管理"
             android:textAllCaps="false"
             android:textColor="#FFFFFF" />
 
