@@ -33,11 +33,27 @@ import com.example.healthydiet.activity.FoodlistActivity;
 import com.example.healthydiet.activity.MainActivity;
 import com.example.healthydiet.activity.RegisterActivity;
 import com.example.healthydiet.activity.ViewFoodRecordActivity;
+import com.example.healthydiet.adapter.ExerciseTodayAdapter;
 import com.example.healthydiet.adapter.FoodRecordAdapter;
+import com.example.healthydiet.adapter.PostListAdapter;
+import com.example.healthydiet.entity.ExerciseRecord;
 import com.example.healthydiet.entity.FoodRecord;
+import com.example.healthydiet.entity.Post;
 import com.example.healthydiet.entity.User;
+import com.example.healthydiet.entity.WeightRecord;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,8 +67,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 // DietFragment.java
 public class DietFragment extends Fragment {
@@ -75,6 +95,7 @@ public class DietFragment extends Fragment {
     private double total_potassium=0;
     private double total_dietaryFiber=0;
     private  double generation;
+    private LineChart weightTrendGraph;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 101;
     private static final int REQUEST_CODE_GALLERY = 100;
@@ -94,7 +115,7 @@ public class DietFragment extends Fragment {
 
         webSocketManager = WebSocketManager.getInstance();
         webSocketManager.logConnectionStatus();  // 记录连接状态
-
+        weightTrendGraph = view.findViewById(R.id.weightTrendGraph);  // HelloChart 图表
         // 注册食物记录列表回调
         webSocketManager.registerCallback(WebSocketMessageType.FOOD_RECORD_GET, message -> {
             Log.d("FoodRecordList", "Received food record list response: " + message);
@@ -136,7 +157,7 @@ public class DietFragment extends Fragment {
 
                 User user = UserManager.getInstance().getUser();
                 int gender= user.getGender();
-                int weight= user.getWeight();
+                double weight= user.getWeight();
                 double activity_factor= user.getActivity_factor();
 
                 if(gender==0){
@@ -230,7 +251,42 @@ public class DietFragment extends Fragment {
         }
         circularButton = view.findViewById(R.id.circularButton);
         circularButton.setOnClickListener(v -> openGallery());
+
+        webSocketManager.registerCallback(WebSocketMessageType.WEIGHT_RECORD_GET, message -> {
+            Log.d("WeightRecord", "Received WeightRecord list response: " + message);
+            try {
+                JSONArray weightLists = new JSONArray(message);
+                List<WeightRecord> WeightList = new ArrayList<>();
+
+                for (int i = 0; i < weightLists.length(); i++) {
+                    JSONObject postJson = weightLists.getJSONObject(i);
+                    WeightRecord weightRecord = new WeightRecord(
+                            postJson.getInt("userId"),
+                            postJson.getDouble("weight"),
+                            postJson.getString("time")
+                    );
+
+                    WeightList.add(weightRecord);
+                }
+
+                getActivity().runOnUiThread(() -> setupWeightTrendGraph(WeightList));
+
+            } catch (Exception e) {
+                Log.e("WeightList", "Error processing post list: " + e.getMessage());
+                e.printStackTrace();
+            }
+        });
+
+        // 确保WebSocket已连接后再发送请求
+        if (!webSocketManager.isConnected()) {
+            Log.d("WeightList", "WebSocket not connected, attempting to reconnect...");
+            webSocketManager.reconnect();
+        }
+        String getPost = "getUserWeights";
+        webSocketManager.sendMessage(getPost);
+
         return view;
+
     }
     // 权限请求结果回调
     @Override
@@ -304,6 +360,7 @@ public class DietFragment extends Fragment {
             }
         }
     }
+
     private Bitmap resizeBitmap(Bitmap original, int maxWidth, int maxHeight) {
         int width = original.getWidth();
         int height = original.getHeight();
@@ -443,7 +500,144 @@ public class DietFragment extends Fragment {
             });
         }
     }
-public boolean istoday(String day) throws ParseException {
+
+    private String getCurrentDate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new java.util.Date());
+    }
+
+    private void setupWeightTrendGraph(List<WeightRecord> weightRecordList) {
+        Log.d("WeightTrendGraph", "setupWeightTrendGraph started");
+
+        // 获取当前日期并计算最近7天的日期
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        Date currentDate = new Date();
+        long currentTimeMillis = currentDate.getTime();
+        long sevenDaysAgoMillis = currentTimeMillis - (7L * 24 * 60 * 60 * 1000);  // 7天前的时间戳
+        Date sevenDaysAgoDate = new Date(sevenDaysAgoMillis);
+
+        Log.d("WeightTrendGraph", "Current date: " + dateFormat.format(currentDate));
+        Log.d("WeightTrendGraph", "7 days ago: " + dateFormat.format(sevenDaysAgoDate));
+
+        // 创建一个 List 来存储最近7天的日期（按日期顺序）
+        List<String> recent7Days = new ArrayList<>();
+        for (int i = 6; i >= 0; i--) {
+            Date date = new Date(currentTimeMillis - (i * 24 * 60 * 60 * 1000));
+            recent7Days.add(dateFormat.format(date));  // 获取格式化后的日期
+        }
+
+        Log.d("WeightTrendGraph", "Recent 7 days: " + recent7Days);
+
+        // 创建一个 Map 来存储每天的体重（如果没有数据，则为null）
+        HashMap<String, Double> dailyWeightMap = new HashMap<>();
+
+        // 默认每天的体重为 null
+        for (String date : recent7Days) {
+            dailyWeightMap.put(date, null);
+            Log.d("WeightTrendGraph", "Initialized " + date + " with null weight");
+        }
+
+        // 遍历所有体重记录并填充每天的体重
+        for (WeightRecord record : weightRecordList) {
+            String date = record.getTime();  // 获取日期
+            try {
+                Date recordDate = dateFormat.parse(date);  // 将日期字符串转换为 Date 对象
+
+                if (recordDate.after(sevenDaysAgoDate) || recordDate.equals(sevenDaysAgoDate)) {
+                    double weight = record.getWeight();  // 获取体重
+                    dailyWeightMap.put(dateFormat.format(recordDate), weight);  // 填充该日期的体重
+                    Log.d("WeightTrendGraph", "Weight record: " + recordDate + " -> " + weight);
+                }
+            } catch (ParseException e) {
+                Log.e("WeightTrendGraph", "Error parsing date: " + date, e);
+            }
+        }
+
+        // 如果某天没有体重记录，使用前一天的体重
+        String lastWeight = null;  // 用于记录前一天的体重
+        for (int i = 0; i < recent7Days.size(); i++) {
+            String date = recent7Days.get(i);
+            Double weight = dailyWeightMap.get(date);
+            Log.d("WeightTrendGraph", "dailyWeightMap: " + weight);
+
+            if (weight == null) {
+                // 如果当天没有体重记录，使用前一天的体重
+                if (lastWeight != null) {
+                    dailyWeightMap.put(date, Double.valueOf(lastWeight));  // 使用前一天的体重
+                    Log.d("WeightTrendGraph", "No weight for " + date + ", using previous weight: " + lastWeight);
+                }
+                else{
+                    dailyWeightMap.put(date, 0.0);
+                }
+            } else {
+                lastWeight = String.valueOf(weight);  // 更新前一天的体重
+                Log.d("WeightTrendGraph", "Updated last weight to: " + lastWeight);
+            }
+        }
+
+        dailyWeightMap.forEach((key, value) -> {
+            Log.d("WeightTrendGraph", "Date: " + key + ", Weight: " + value);
+        });
+        // 创建一个 ArrayList 来存放 BarEntry
+        ArrayList<Entry> entries = new ArrayList<>();
+        ArrayList<String> xLabels = new ArrayList<>();
+
+        // 将排序后的数据填充到 Entry 和 X 轴标签中
+        int index = 0;
+        for (String date : recent7Days) {  // 使用最近7天的数据
+            Double weight = dailyWeightMap.get(date);  // 获取该日期的体重
+            if (weight != null) {
+                // 将 x 轴的索引值设置为当前索引，y 轴为体重
+                entries.add(new Entry(index, weight.floatValue()));  // Entry 的第二个参数为浮动值
+                Log.d("WeightTrendGraph", "Added entry for " + date + " -> " + weight);
+
+                // 将日期添加到 X 轴标签
+                xLabels.add(date);
+                index++;
+            }
+        }
+
+        // 创建数据集
+        LineDataSet dataSet = new LineDataSet(entries, "体重(kg)");
+        dataSet.setColor(getResources().getColor(android.R.color.holo_green_light));  // 设置线条颜色
+        dataSet.setValueTextColor(getResources().getColor(android.R.color.black));  // 设置数据点的文本颜色
+
+        // 创建 LineData
+        LineData lineData = new LineData(dataSet);
+
+        // 设置数据给 LineChart（假设你用的是 LineChart 类型的图表）
+        weightTrendGraph.setData(lineData);
+
+        // 设置图表的描述标题
+        weightTrendGraph.getDescription().setEnabled(true);
+        weightTrendGraph.getDescription().setText("一周体重趋势");
+        weightTrendGraph.getDescription().setTextSize(14f);
+        weightTrendGraph.getDescription().setPosition(0f, 1f);  // 设置标题的位置
+
+        // 设置图表的 X 轴标签
+        XAxis xAxis = weightTrendGraph.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(xLabels));  // 设置 X 轴的标签
+        xAxis.setGranularity(1f);  // 强制显示每一天的刻度
+
+        // 设置 Y 轴
+        YAxis leftAxis = weightTrendGraph.getAxisLeft();
+        leftAxis.setAxisMinimum(0f);  // 设置最小值为0
+        leftAxis.setDrawLabels(true);  // 显示左侧的刻度标签
+
+        // 隐藏右侧 Y 轴
+        weightTrendGraph.getAxisRight().setEnabled(false);
+
+        // 设置图表背景网格
+        weightTrendGraph.setDrawGridBackground(false);  // 禁用背景网格
+
+        // 刷新图表
+        weightTrendGraph.invalidate();
+
+        Log.d("WeightTrendGraph", "Graph setup complete");
+    }
+
+    public boolean istoday(String day) throws ParseException {
     // 定义日期格式
     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

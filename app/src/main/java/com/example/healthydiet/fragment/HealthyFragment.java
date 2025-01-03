@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.healthydiet.activity.AllExerciseRecordActivity;
 import com.example.healthydiet.activity.FoodlistActivity;
 import com.example.healthydiet.adapter.ExerciseItemsAdapter;
+import com.example.healthydiet.adapter.ExerciseTodayAdapter;
 import com.example.healthydiet.entity.ExerciseItem;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
@@ -62,7 +63,7 @@ public class HealthyFragment extends Fragment {
     private Button all_record_button;
     private TextView todayExerciseTime, todayCaloriesBurned,weekWeight,weekExercise;
     private List<ExerciseRecord> exerciseRecords = new ArrayList<>();
-    private ExerciseHistoryAdapter adapter;
+    private ExerciseTodayAdapter adapter;
     private WebSocketManager webSocketManager;
 
 //    @Override
@@ -90,16 +91,14 @@ public class HealthyFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_healthy, container, false);
         // 初始化视图组件
         exerciseTrendGraph = view.findViewById(R.id.exerciseTrendGraph);  // HelloChart 图表
-        weightTrendGraph = view.findViewById(R.id.weightTrendGraph);  // HelloChart 图表
         exerciseListView = view.findViewById(R.id.exerciseListView);  // 初始化 ListView
         goToExerciseSelectButton = view.findViewById(R.id.goToExerciseSelectButton);
         todayExerciseTime = view.findViewById(R.id.todayExerciseTime);
         todayCaloriesBurned = view.findViewById(R.id.todayCaloriesBurned);
-        weekExercise = view.findViewById(R.id.weekExercise);
-        weekWeight = view.findViewById(R.id.weekWeight);
+
 
         // 初始化 ListView 适配器
-        adapter = new ExerciseHistoryAdapter(getContext(), exerciseRecords);  // 适配器传递上下文
+        adapter = new ExerciseTodayAdapter(getContext(), exerciseRecords);  // 适配器传递上下文
         exerciseListView.setAdapter(adapter);
         User user = UserManager.getInstance().getUser();
         // 注册 WebSocket 回调
@@ -167,7 +166,7 @@ public class HealthyFragment extends Fragment {
             }
         }
 
-        adapter = new ExerciseHistoryAdapter(getContext(), todayRecords);  // 适配器传递上下文
+        adapter = new ExerciseTodayAdapter(getContext(), todayRecords);  // 适配器传递上下文
         exerciseListView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

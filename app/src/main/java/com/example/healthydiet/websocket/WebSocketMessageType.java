@@ -8,6 +8,8 @@ public class WebSocketMessageType {
     public static final String FOOD_RECORD_GET="getAllFoodRecord";
     public static final String FOOD_ITEM_GET="getFoodItemById";
     public static final String EXERCISE_RECORD_GET = "getUserExerciseRecord";
+    public static final String WEIGHT_RECORD_GET = "getUserWeights";
+
     public static final String EXERCISE_RECORD_ADD = "AddExerciseRecord";
     public static final String EXERCISE_LIST = "getAllExerciseItem";
     public static final String UPDATE_USER="updateUser";

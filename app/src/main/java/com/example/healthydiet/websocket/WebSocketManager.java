@@ -310,8 +310,29 @@ public class WebSocketManager {
                     }
                     return;
                 }
+                case WEIGHT_GET_SUCCESS:{
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as comment list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.WEIGHT_RECORD_GET);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
+                case WEIGHT_GET_SUCCESS:{
+                    String msg = get.getString("data");
+                    Log.d("WebSocket", "Received array message, treating as comment list");
+                    WebSocketCallback callback = callbackMap.get(WebSocketMessageType.WEIGHT_RECORD_GET);
+                    if (callback != null) {
+                        handler.post(() -> callback.onMessage(msg));
+                    }
+                    return;
+                }
                     default:
                         break;
+
+
+
 
             }
         } catch (Exception e) {

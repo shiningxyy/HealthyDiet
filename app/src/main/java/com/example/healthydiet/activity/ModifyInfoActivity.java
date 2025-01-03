@@ -99,7 +99,8 @@ public class ModifyInfoActivity extends AppCompatActivity {
             }
 
             // 尝试将数字字段转换为整数
-            int age = 0, height = 0, weight = 0;
+            int age = 0, height = 0;
+            double weight = 0;
             try {
                 if (!ageString.isEmpty()) {
                     age = Integer.parseInt(ageString);
@@ -137,6 +138,11 @@ public class ModifyInfoActivity extends AppCompatActivity {
             }
             if (weight > 0) {
                 user.setWeight(weight);
+                if (!webSocketManager.isConnected()) {
+                    Log.d("addWeight", "WebSocket not connected, attempting to reconnect...");
+                    webSocketManager.reconnect();
+                }
+                webSocketManager.sendMessage("addWeight:"+weight);
             }
 
             // 密码加密
@@ -182,6 +188,7 @@ public class ModifyInfoActivity extends AppCompatActivity {
             webSocketManager.reconnect();
         }
         webSocketManager.sendMessage(updateMessage);
+
     }
 
     @Override
