@@ -198,6 +198,16 @@ public class WebSocketManager {
                     }
                     return;
                 }
+                case FOOD_IDENTIFY_SUCCESS:{
+                    String type = WebSocketMessageType.FOOD_IDENTIFY;
+                    WebSocketCallback callback = callbackMap.get(type);
+                    if (callback != null) {
+                        Log.d("WebSocket", "Found callback for add food record response");
+                        Log.d("WebSocket", message);
+                        handler.post(() -> callback.onMessage(message));
+                    }
+                    return;
+                }
 
                 case POST_GET_SUCCESS:{
                     String msg = get.getString("data");
