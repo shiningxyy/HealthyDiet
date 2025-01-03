@@ -399,8 +399,11 @@ public class DietFragment extends Fragment {
             // 使用 Base64 编码字节数组并返回编码后的字符串
             String base64Image = Base64.encodeToString(compressedImageBytes, Base64.NO_WRAP);  // NO_WRAP 去除换行符
             saveBase64ToFile(base64Image);
-            sendBase64InChunks(base64Image);
-            // 添加图片前缀，确保正确解码
+            if (!webSocketManager.isConnected()) {
+                Log.d("ImageDetails", "WebSocket not connected, attempting to reconnect...");
+                webSocketManager.reconnect();
+            }
+            webSocketManager.sendMessage("identify:"+base64Image);            // 添加图片前缀，确保正确解码
             return base64Image;
         } catch (IOException e) {
             Log.e("ImageDetails", "Error converting image to Base64: " + e.getMessage());
