@@ -47,6 +47,7 @@
         <activity android:name=".activity.PostManageActivity"/>
         <activity android:name=".activity.CommentManageActivity"/>
         <activity android:name=".activity.NotificationListActivity"/>
+        <activity android:name=".activity.AnnounceActivity"/>
     </application>
 
 </manifest>

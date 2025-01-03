@@ -30,6 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class CommunityFragment extends Fragment {
@@ -72,6 +74,26 @@ public class CommunityFragment extends Fragment {
 
                     PostList.add(post);
                 }
+                // Sort the list to put "管理员公告" posts at the front
+                Collections.sort(PostList, new Comparator<Post>() {
+                    @Override
+                    public int compare(Post p1, Post p2) {
+                        // If both posts are "管理员公告", return 0 (no change)
+                        if (p1.getTags().equals("管理员公告") && p2.getTags().equals("管理员公告")) {
+                            return 0;
+                        }
+                        // If p1 is "管理员公告", it should come before p2
+                        if (p1.getTags().equals("管理员公告")) {
+                            return -1;
+                        }
+                        // If p2 is "管理员公告", it should come before p1
+                        if (p2.getTags().equals("管理员公告")) {
+                            return 1;
+                        }
+                        // Otherwise, keep their order (return 0)
+                        return 0;
+                    }
+                });
 
                 // 在主线程更新UI
                 if (isAdded() && getActivity() != null) {

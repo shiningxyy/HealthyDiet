@@ -19,6 +19,8 @@ public class AdminHomepage extends AppCompatActivity {
     private Button comment_button;
     private String profilePicture;
     private String name;
+    private Button announce_button;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_adminhomepage);
@@ -29,7 +31,7 @@ public class AdminHomepage extends AppCompatActivity {
         // 获取视图中的头像和昵称控件
         CircleImageView profileImageView = findViewById(R.id.profileImageView);
         TextView nicknameTextView=findViewById(R.id.nicknameTextView);
-        nicknameTextView.setText(name);
+        //nicknameTextView.setText(name);
 
         // 使用 Glide 或 Picasso 等库加载图片
         Glide.with(this)
@@ -73,5 +75,15 @@ public class AdminHomepage extends AppCompatActivity {
             Intent intent = new Intent(AdminHomepage.this, CommentManageActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
             startActivity(intent);
         });
+
+
+        announce_button = findViewById(R.id.announceButton);
+        // 设置按钮点击事件，跳转到另一个 Activity
+        announce_button.setOnClickListener(v -> {
+            // 使用 Intent 跳转到新的 Activity
+            Intent intent = new Intent(AdminHomepage.this, AnnounceActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            startActivity(intent);
+        });
+
     }
 }
