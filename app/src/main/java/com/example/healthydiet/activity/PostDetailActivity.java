@@ -101,6 +101,7 @@ public class PostDetailActivity extends AppCompatActivity {
                             commentJson.getString("content"),
                             commentJson.getString("commentUserProfilePicture")
                     );
+                    System.out.println(comment.getComment_content());
                     CommentList.add(comment);
                 }
 
@@ -142,10 +143,11 @@ public class PostDetailActivity extends AppCompatActivity {
                 webSocketManager.reconnect();
             }
             webSocketManager.sendMessage(commentMessage);
-
+            // 刷新评论列表
+            webSocketManager.sendMessage("getPostComments:" + post.getPost_id());
             dialog.dismiss();  // 关闭 Dialog
-            Intent intent = new Intent(PostDetailActivity.this, PostDetailActivity.class);
-            startActivity(intent);
+          //  Intent intent = new Intent(PostDetailActivity.this, PostDetailActivity.class);
+          //  startActivity(intent);
         });
 
         Button noButton = dialog.findViewById(R.id.noButton);
@@ -155,9 +157,15 @@ public class PostDetailActivity extends AppCompatActivity {
     }
     // 当接收到更新的数据时，这个方法会被调用
     private void onCommentListUpdated(List<Comment> commentList) {
-        commentListView = findViewById(R.id.exerciseItemsListView);
-        postCommentsAdapter = new PostCommentsAdapter(this, commentList);  // 适配器传递上下文
-        commentListView.setAdapter(postCommentsAdapter);
+        commentListView = findViewById(R.id.commentListView);
+        if (postCommentsAdapter == null) {
+            postCommentsAdapter = new PostCommentsAdapter(this, commentList);
+            commentListView.setAdapter(postCommentsAdapter);
+        } else {
+            // 如果适配器已经存在，更新它的数据并刷新
+            postCommentsAdapter.updateData(commentList);
+            postCommentsAdapter.notifyDataSetChanged();  // 通知适配器数据已更新
+        }
     }
 
 }

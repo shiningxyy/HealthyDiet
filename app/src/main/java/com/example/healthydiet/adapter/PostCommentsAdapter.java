@@ -27,7 +27,10 @@ public class PostCommentsAdapter extends BaseAdapter {
         this.context = context;
         this.commentList = commentList;
     }
-
+    // 更新数据的方法
+    public void updateData(List<Comment> newCommentList) {
+        this.commentList = newCommentList;
+    }
     @Override
     public int getCount() {
         return commentList.size(); // 返回数据集合的大小
