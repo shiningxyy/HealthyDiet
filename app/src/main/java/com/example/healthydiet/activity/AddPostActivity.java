@@ -39,7 +39,7 @@ public class AddPostActivity extends AppCompatActivity {
         setContentView(R.layout.activity_addpost);
 
         // 获取输入框
-        titleEditText = findViewById(R.id.contentEditText);
+        titleEditText = findViewById(R.id.titleEditText);
         contentEditText = findViewById(R.id.contentEditText);
 
         publishButton = findViewById(R.id.publishButton);

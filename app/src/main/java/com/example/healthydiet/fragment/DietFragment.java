@@ -244,13 +244,7 @@ public class DietFragment extends Fragment {
             intent.putExtra("generation",generation);
             startActivity(intent);
         });
-// 请求权限
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
-        } else {
-            // 权限已授予，执行相册操作
-            openGallery();
-        }
+
         circularButton = view.findViewById(R.id.circularButton);
         circularButton.setOnClickListener(v -> openGallery());
         BMI = view.findViewById(R.id.BMI);
