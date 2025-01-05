@@ -1,6 +1,5 @@
 package com.example.healthydiet.fragment;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -22,36 +21,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.healthydiet.R;
-import com.example.healthydiet.UserManager;
+import com.example.healthydiet.manager.UserManager;
 import com.example.healthydiet.activity.AddFoodRecordActivity;
 import com.example.healthydiet.activity.DietAnalysisActivity;
-import com.example.healthydiet.activity.FoodlistActivity;
-import com.example.healthydiet.activity.MainActivity;
-import com.example.healthydiet.activity.RegisterActivity;
+import com.example.healthydiet.activity.FoodListActivity;
 import com.example.healthydiet.activity.ViewFoodRecordActivity;
-import com.example.healthydiet.adapter.ExerciseTodayAdapter;
-import com.example.healthydiet.adapter.FoodRecordAdapter;
-import com.example.healthydiet.adapter.PostListAdapter;
-import com.example.healthydiet.entity.ExerciseRecord;
 import com.example.healthydiet.entity.FoodItem;
 import com.example.healthydiet.entity.FoodRecord;
-import com.example.healthydiet.entity.Post;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.entity.WeightRecord;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -69,12 +55,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 // DietFragment.java
 public class DietFragment extends Fragment {
@@ -194,7 +177,7 @@ public class DietFragment extends Fragment {
         // 设置按钮点击事件，跳转到另一个 Activity
         breakfast_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
-            Intent intent = new Intent(getActivity(), FoodlistActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            Intent intent = new Intent(getActivity(), FoodListActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
             // 将 user 对象传递给目标 Activity
           //  intent.putExtra("user", user); // 将 user 对象作为 Extra 传递
             startActivity(intent);
@@ -205,7 +188,7 @@ public class DietFragment extends Fragment {
         // 设置按钮点击事件，跳转到另一个 Activity
         lunch_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
-            Intent intent = new Intent(getActivity(), FoodlistActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            Intent intent = new Intent(getActivity(), FoodListActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
             startActivity(intent);
         });
 
@@ -214,7 +197,7 @@ public class DietFragment extends Fragment {
         // 设置按钮点击事件，跳转到另一个 Activity
         dinner_button.setOnClickListener(v -> {
             // 使用 Intent 跳转到新的 Activity
-            Intent intent = new Intent(getActivity(), FoodlistActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
+            Intent intent = new Intent(getActivity(), FoodListActivity.class); // 这里的 NewActivity 是你想跳转到的 Activity
             startActivity(intent);
         });
 

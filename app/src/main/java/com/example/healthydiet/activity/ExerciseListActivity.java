@@ -1,25 +1,19 @@
 package com.example.healthydiet.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.ListView;
 
 import com.example.healthydiet.adapter.ExerciseItemsAdapter;
-import com.example.healthydiet.adapter.FoodListAdapter;
-import com.example.healthydiet.adapter.SidebarAdapter;
 import com.example.healthydiet.entity.ExerciseItem;
-import com.example.healthydiet.entity.FoodItem;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -28,7 +22,7 @@ import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
 
 
-public class ExerciselistActivity extends AppCompatActivity{
+public class ExerciseListActivity extends AppCompatActivity{
 
     private WebSocketManager webSocketManager;
 
@@ -52,7 +46,7 @@ public class ExerciselistActivity extends AppCompatActivity{
 
         // 返回按钮的点击监听器
         toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(ExerciselistActivity.this, HomeActivity.class);
+            Intent intent = new Intent(ExerciseListActivity.this, HomeActivity.class);
             intent.putExtra("fragment_key", "HealthyFragment");
 
             startActivity(intent);

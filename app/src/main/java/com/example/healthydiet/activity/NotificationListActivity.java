@@ -8,9 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.healthydiet.R;
-import com.example.healthydiet.UserManager;
+import com.example.healthydiet.manager.UserManager;
 import com.example.healthydiet.adapter.NotificationAdapter;
-import com.example.healthydiet.adapter.UserManageAdapter;
 import com.example.healthydiet.entity.Notification;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;

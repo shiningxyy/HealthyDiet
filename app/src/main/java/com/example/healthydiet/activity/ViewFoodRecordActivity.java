@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.healthydiet.R;
-import com.example.healthydiet.UserManager;
+import com.example.healthydiet.manager.UserManager;
 import com.example.healthydiet.adapter.FoodRecordAdapter;
 
 import com.example.healthydiet.entity.FoodRecord;

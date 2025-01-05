@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.healthydiet.R;
 import com.example.healthydiet.entity.Post;
-import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class PostManageAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         PostManageAdapter.ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.post_manage_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_post_manage, parent, false);
             viewHolder = new PostManageAdapter.ViewHolder();
             viewHolder.postIdTextView = convertView.findViewById(R.id.postIdTextView);
             viewHolder.postTitleTextView = convertView.findViewById(R.id.postTitleTextView);

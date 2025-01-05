@@ -27,7 +27,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.food_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_food, parent, false);
         return new ViewHolder(view);
     }
 
@@ -59,7 +59,7 @@ public class FoodListAdapter extends RecyclerView.Adapter<FoodListAdapter.ViewHo
     private void showFoodPopup(FoodItem foodItem) {
         // 创建Dialog
         Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.food_card);
+        dialog.setContentView(R.layout.card_food);
 
         // 设置卡片中的文本
         TextView foodNameTextView = dialog.findViewById(R.id.foodNameTextView);

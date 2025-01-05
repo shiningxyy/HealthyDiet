@@ -1,22 +1,16 @@
 package com.example.healthydiet.activity;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.TextView;
 
 import com.example.healthydiet.adapter.FoodListAdapter;
 import com.example.healthydiet.adapter.SidebarAdapter;
 import com.example.healthydiet.entity.FoodItem;
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,12 +22,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.healthydiet.R;
-import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
 
 
-public class FoodlistActivity extends AppCompatActivity implements SidebarAdapter.OnCategoryClickListener{
+public class FoodListActivity extends AppCompatActivity implements SidebarAdapter.OnCategoryClickListener{
 
     private WebSocketManager webSocketManager;
     private Handler handler;

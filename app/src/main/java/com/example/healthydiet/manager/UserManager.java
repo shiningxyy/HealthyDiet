@@ -1,4 +1,4 @@
-package com.example.healthydiet;
+package com.example.healthydiet.manager;
 
 import com.example.healthydiet.entity.User;
 

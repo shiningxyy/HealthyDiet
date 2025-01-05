@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatImageButton;
@@ -15,12 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.healthydiet.R;
-import com.example.healthydiet.UserManager;
+import com.example.healthydiet.manager.UserManager;
 import com.example.healthydiet.activity.AddPostActivity;
-import com.example.healthydiet.activity.ViewFoodRecordActivity;
-import com.example.healthydiet.adapter.FoodRecordAdapter;
 import com.example.healthydiet.adapter.PostListAdapter;
-import com.example.healthydiet.entity.FoodRecord;
 import com.example.healthydiet.entity.Post;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;

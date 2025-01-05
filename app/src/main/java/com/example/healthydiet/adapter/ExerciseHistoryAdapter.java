@@ -47,7 +47,7 @@ public class ExerciseHistoryAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.exercise_record_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_exercise_record, parent, false);
             holder = new ViewHolder();
             holder.exerciseNameTextView = convertView.findViewById(R.id.exerciseNameTextView);
             holder.exerciseDurationTextView = convertView.findViewById(R.id.exerciseDurationTextView);

@@ -11,11 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.healthydiet.UserManager;
-import com.example.healthydiet.activity.HomeActivity;
-import com.example.healthydiet.activity.MainActivity;
+import com.example.healthydiet.manager.UserManager;
 import com.example.healthydiet.entity.ExerciseItem;
-import com.example.healthydiet.entity.ExerciseRecord;
 import com.example.healthydiet.R;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
@@ -24,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import android.content.Intent;
 
 public class ExerciseItemsAdapter extends BaseAdapter {
     private List<ExerciseItem> exerciseItems;
@@ -55,7 +51,7 @@ public class ExerciseItemsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.exercise_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_exercise, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.exerciseNameTextView = convertView.findViewById(R.id.exerciseNameTextView);
             viewHolder.caloriesTextView = convertView.findViewById(R.id.exerciseCaloriesTextView);
@@ -84,7 +80,7 @@ public class ExerciseItemsAdapter extends BaseAdapter {
     // 弹出运动详情卡片的 Dialog
     private void showExercisePopup(ExerciseItem exerciseItem) {
         Dialog dialog = new Dialog(context);
-        dialog.setContentView(R.layout.exercise_card);
+        dialog.setContentView(R.layout.card_exercise);
         EditText exerciseDurationEditText = dialog.findViewById(R.id.exerciseDurationEditText);
 
         Button yesButton = dialog.findViewById(R.id.yesButton);

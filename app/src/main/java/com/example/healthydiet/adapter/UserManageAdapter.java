@@ -46,7 +46,7 @@ public class UserManageAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         UserManageAdapter.ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.user_manage_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_user_manage, parent, false);
             viewHolder = new UserManageAdapter.ViewHolder();
             viewHolder.userIdTextView = convertView.findViewById(R.id.userIdTextView);
             viewHolder.isBlockedTextView = convertView.findViewById(R.id.isBlockedTextView);

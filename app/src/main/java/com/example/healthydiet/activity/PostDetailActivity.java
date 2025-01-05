@@ -1,8 +1,6 @@
 package com.example.healthydiet.activity;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -15,12 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.healthydiet.R;
-import com.example.healthydiet.UserManager;
-import com.example.healthydiet.adapter.ExerciseHistoryAdapter;
+import com.example.healthydiet.manager.UserManager;
 import com.example.healthydiet.adapter.PostCommentsAdapter;
 import com.example.healthydiet.entity.Comment;
-import com.example.healthydiet.entity.ExerciseItem;
-import com.example.healthydiet.entity.ExerciseRecord;
 import com.example.healthydiet.entity.Post;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
@@ -131,7 +126,7 @@ public class PostDetailActivity extends AppCompatActivity {
     }
     private void showCommentPopup() {
         Dialog dialog = new Dialog(PostDetailActivity.this);
-        dialog.setContentView(R.layout.comment_card);
+        dialog.setContentView(R.layout.card_comment);
         EditText commentEditText = dialog.findViewById(R.id.commentEditText);
 
         Button yesButton = dialog.findViewById(R.id.yesButton);

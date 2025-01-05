@@ -1,33 +1,22 @@
 package com.example.healthydiet.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.ListView;
 
-import com.example.healthydiet.UserManager;
+import com.example.healthydiet.manager.UserManager;
 import com.example.healthydiet.adapter.ExerciseHistoryAdapter;
-import com.example.healthydiet.adapter.ExerciseItemsAdapter;
-import com.example.healthydiet.adapter.FoodListAdapter;
-import com.example.healthydiet.adapter.SidebarAdapter;
-import com.example.healthydiet.entity.ExerciseItem;
 import com.example.healthydiet.entity.ExerciseRecord;
-import com.example.healthydiet.entity.FoodItem;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.healthydiet.R;
 import com.example.healthydiet.entity.User;

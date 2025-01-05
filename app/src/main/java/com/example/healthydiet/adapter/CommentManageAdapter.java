@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.example.healthydiet.R;
 import com.example.healthydiet.entity.Comment;
-import com.example.healthydiet.entity.Post;
 import com.example.healthydiet.websocket.WebSocketManager;
 
 import java.util.List;
@@ -47,7 +46,7 @@ public class CommentManageAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         CommentManageAdapter.ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.comment_manage_item, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_comment_manage, parent, false);
             viewHolder = new CommentManageAdapter.ViewHolder();
             viewHolder.commentIdTextView = convertView.findViewById(R.id.commentIdTextView);
             viewHolder.contentTextView = convertView.findViewById(R.id.contentTextView);

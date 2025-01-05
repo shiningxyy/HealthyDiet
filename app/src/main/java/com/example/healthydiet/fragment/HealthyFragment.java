@@ -1,9 +1,7 @@
 package com.example.healthydiet.fragment;
 
 import android.content.Intent;
-import android.health.connect.datatypes.WeightRecord;
 import android.os.Bundle;
-import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +13,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.healthydiet.activity.AllExerciseRecordActivity;
-import com.example.healthydiet.activity.FoodlistActivity;
-import com.example.healthydiet.adapter.ExerciseItemsAdapter;
 import com.example.healthydiet.adapter.ExerciseTodayAdapter;
-import com.example.healthydiet.entity.ExerciseItem;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
 import com.example.healthydiet.websocket.WebSocketMessageType;
@@ -30,12 +25,10 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 
-import com.example.healthydiet.UserManager;
+import com.example.healthydiet.manager.UserManager;
 
-import com.example.healthydiet.activity.ExerciselistActivity;
-import com.example.healthydiet.adapter.ExerciseHistoryAdapter;
+import com.example.healthydiet.activity.ExerciseListActivity;
 import com.example.healthydiet.entity.ExerciseRecord;
 import com.example.healthydiet.R;
 
@@ -472,7 +465,7 @@ public class HealthyFragment extends Fragment {
 
     // 跳转到运动项目选择界面
     private void onSelectExerciseClicked() {
-        Intent intent = new Intent(getActivity(), ExerciselistActivity.class);
+        Intent intent = new Intent(getActivity(), ExerciseListActivity.class);
         startActivity(intent);
     }
 }

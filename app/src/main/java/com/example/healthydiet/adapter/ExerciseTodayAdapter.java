@@ -47,7 +47,7 @@ public class ExerciseTodayAdapter extends BaseAdapter {
         ViewHolder holder;
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.exercise_record_today, parent, false);
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_exercise_record_today, parent, false);
             holder = new ViewHolder();
             holder.exerciseNameTextView = convertView.findViewById(R.id.exerciseNameTextView);
             holder.exerciseDurationTextView = convertView.findViewById(R.id.exerciseDurationTextView);

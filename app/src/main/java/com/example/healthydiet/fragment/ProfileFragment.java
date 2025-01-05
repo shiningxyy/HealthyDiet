@@ -26,19 +26,13 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.healthydiet.R;
-import com.example.healthydiet.UserManager;
-import com.example.healthydiet.activity.AddFoodRecordActivity;
+import com.example.healthydiet.manager.UserManager;
 import com.example.healthydiet.activity.MainActivity;
 import com.example.healthydiet.activity.ModifyInfoActivity;
 import com.example.healthydiet.activity.NotificationListActivity;
-import com.example.healthydiet.activity.ViewFoodRecordActivity;
 import com.example.healthydiet.activity.ReminderActivity;
-import com.example.healthydiet.entity.FoodItem;
 import com.example.healthydiet.entity.User;
 import com.example.healthydiet.websocket.WebSocketManager;
-import com.example.healthydiet.websocket.WebSocketMessageType;
-
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
